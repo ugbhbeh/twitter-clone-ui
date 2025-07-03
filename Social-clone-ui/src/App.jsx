@@ -18,11 +18,11 @@ function App() {
 
   return (
     <Router>
-      <Route>
+      <Routes>
         <Route path="/" element={<Home isAuthenticated={isAuthenticated} /> } />
         <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to ="/" /> } />
         <Route path="/signup" element={!isAuthenticated ? <Signup /> : <Navigate to ="/" /> } />
-        </Route>
+        </Routes>
     </Router>
   )
 }
