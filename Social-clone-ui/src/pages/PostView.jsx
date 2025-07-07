@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import api from "../api/api";
 
 export default function PostView() {
-    const {postId} = useParams();
+    const {Id} = useParams();
     const [post, setPost] = useState(null);
     const [newComment, setNewComment] = useState("");
     const [editingComment, setEditingComment] = useState(null);
@@ -11,13 +11,13 @@ export default function PostView() {
 
     const fetchPostWithComments = useCallback(async () => {
         try {
-            const res = await api.get(`/posts/${postId}`);
+            const res = await api.get(`/posts/${Id}`);
             setPost(res.data);
             setError("");
         } catch (err) {
             setError(err.response?.data?.error || "Error loading page");
         }
-    }, [postId]
+    }, [Id]
 )
 
     useEffect(() => {
@@ -27,7 +27,7 @@ export default function PostView() {
     const handleAddComment = async (e) => {
         e.preventDefault();
         try {
-            await api.post(`/comments/${postId}`, {
+            await api.post(`/comments/${Id}`, {
                 content: newComment,
             });
             setNewComment("");

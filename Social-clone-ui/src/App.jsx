@@ -18,14 +18,14 @@ function App() {
   }, []);
 
   return (
-    <Router>
+    
       <Routes>
         <Route path="/" element={<Home isAuthenticated={isAuthenticated} /> } />
         <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to ="/" /> } />
         <Route path="/signup" element={!isAuthenticated ? <Signup /> : <Navigate to ="/" /> } />
-         <Route path="/post/:id" element={PostView} />
+         <Route path="/posts/:Id" element={<PostView />} />
         </Routes>
-    </Router>
+    
   )
 }
 
