@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import PostCard from "./PostCard";
 import api from "../api/api";
 
 export default function PostFeed() {
@@ -34,13 +35,9 @@ export default function PostFeed() {
         <p>No posts available.</p>
       ) : (
             posts.map(post => (
-              <div key={post.id}>
-                <h3>{post.author?.username}</h3>
-                <p>{post.content}</p>
-                <small>{new Date(post.createdAt).toLocaleString()}</small>
-              </div>
-            ))
-      )}
+              <PostCard key={post.id} post={post} />
+      ))
+    )}
     </div>   
   );
 }
