@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/api";
 
@@ -9,7 +9,7 @@ export default function PostView() {
     const [editingComment, setEditingComment] = useState(null);
     const [error, setError] = useState("");
 
-    const fetchPostWithComments = async () => {
+    const fetchPostWithComments = useCallback(async () => {
         try {
             const res = await api.get(`/posts/${postId}`);
             setPost(res.data);
@@ -17,11 +17,12 @@ export default function PostView() {
         } catch (err) {
             setError(err.response?.data?.error || "Error loading page");
         }
-    };
+    }, [postId]
+)
 
     useEffect(() => {
         fetchPostWithComments();
-    }, [postId]);
+    }, [fetchPostWithComments]);
 
     const handleAddComment = async (e) => {
         e.preventDefault();
