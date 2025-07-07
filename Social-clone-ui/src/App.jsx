@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Home from './pages/Home'
 import Login from './components/Login'
 import Signup from './components/Signup'
+import PostView from './pages/PostView'
 import { useState, useEffect } from 'react';
 import './App.css'
 
@@ -22,6 +23,7 @@ function App() {
         <Route path="/" element={<Home isAuthenticated={isAuthenticated} /> } />
         <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to ="/" /> } />
         <Route path="/signup" element={!isAuthenticated ? <Signup /> : <Navigate to ="/" /> } />
+         <Route path="/post/:id" element={PostView} />
         </Routes>
     </Router>
   )
