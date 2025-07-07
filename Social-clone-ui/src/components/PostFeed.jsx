@@ -33,29 +33,15 @@ export default function PostFeed() {
       {posts.length === 0 ? (
         <p>No posts available.</p>
       ) : (
-        posts.map(post => (
-          <div key={post.id}>
-            <h3>{post.author?.username || 'Unknown Author'}</h3>
-            <p>{post.content}</p>
-            <small>{new Date(post.createdAt).toLocaleString()}</small>
-          </div>
-        ))
+            posts.map(post => (
+              <div key={post.id}>
+                <h3>{post.author?.username}</h3>
+                <p>{post.content}</p>
+                <small>{new Date(post.createdAt).toLocaleString()}</small>
+              </div>
+            ))
       )}
-    </div>
-   
+    </div>   
   );
 }
-
- //<div>
-      //{posts.length === 0 ? (
-       // <p>No posts available.</p>
-      //) : (
-        //posts.map(post => (
-         // <div key={post.id}>
-         // <h3>{post.author?.username || 'Unknown Author'}</h3>
-        //  <p>{post.content}</p>
-         //  <small>{new Date(post.createdAt).toLocaleString()}</small>
-         // </div>
-      //  ))
-    //  )}
-    //</div>
+           
