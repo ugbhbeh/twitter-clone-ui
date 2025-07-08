@@ -6,7 +6,8 @@ export default function PostFeed() {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
-const fetchPosts = async () => {
+
+    const fetchPosts = async () => {
       setError('');
       setLoading(true);
       try {
@@ -20,7 +21,7 @@ const fetchPosts = async () => {
       }
     };
   
-    useEffect(() => {
+  useEffect(() => {
     fetchPosts();
   }, []);
 
@@ -41,7 +42,7 @@ const fetchPosts = async () => {
     } catch (err){
       console.log("Failed to dislike post", err)
     }
-  };
+  }
 
   if (loading) return <div>Loading posts...</div>;
 
