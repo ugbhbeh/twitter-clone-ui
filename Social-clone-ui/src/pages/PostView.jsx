@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import CommentCard from "../components/CommentCard";
 import api from "../api/api";
 
 export default function PostView() {
@@ -58,22 +59,42 @@ export default function PostView() {
         }
     };
 
+    const handleLike = async (commentId) => {
+      try {
+        await api.post(`/comments/${commentId}/like`);
+        fetchPostWithComments();
+      } catch (err) {
+        console.log("Failed to like comment", err)
+      }
+      
+    };
+
+    const handleDislike = async (commentId) => {
+      try {
+        await api.post(`/comments/${commentId}/dislike`)
+        fetchPostWithComments();
+      } catch (err) {
+        console.log("Failed to dislike comment", err)
+      }
+      
+    };
+
     if(!post) return <div>Loading ...</div>
         return (
     <div className="post-grid">
       {error && <div className="error-message">{error}</div>}
 
-      <article className="post-card fade-in">
-        <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
-        <div className="text-secondary mb-4">
+      <article>
+        <h1>{post.title}</h1>
+        <div>
           By {post.author?.username || "Unknown"} •{" "}
           {new Date(post.createdAt).toLocaleDateString()}
         </div>
-        <p className="mb-6">{post.content}</p>
+        <p>{post.content}</p>
       </article>
 
       <section className="comments-section">
-        <form onSubmit={handleAddComment} className="mb-6">
+        <form onSubmit={handleAddComment}>
           <textarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
@@ -81,73 +102,32 @@ export default function PostView() {
             rows="3"
             required
           />
-          <button type="submit" className="primary mt-2">
+          <button type="submit">
             Add Comment
           </button>
         </form>
 
-        <h3 className="text-xl font-semibold mb-4">Comments</h3>
+        <h3>Comments</h3>
         {post.comments.length === 0 ? (
-          <p className="text-secondary">No comments yet.</p>
+          <p>No comments yet.</p>
         ) : (
-          <ul className="space-y-4">
+          <ul>
             {post.comments.map((comment) => (
-              <li key={comment.id} className="comment fade-in">
-                {editingComment === comment.id ? (
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      handleEditComment(comment.id, e.target.content.value);
-                    }}
-                  >
-                    <textarea
-                      name="content"
-                      defaultValue={comment.content}
-                      rows="2"
-                      required
-                    />
-                    <div className="flex gap-2 mt-2">
-                      <button type="submit" className="primary">
-                        Save
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setEditingComment(null)}
-                        className="danger"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </form>
-                ) : (
-                  <>
-                    <div className="comment-header">
-                      <span className="comment-author">
-                        {comment.author?.username || "Unknown"}
-                      </span>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => setEditingComment(comment.id)}
-                          className="text-sm text-primary"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDeleteComment(comment.id)}
-                          className="text-sm text-danger"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                    <p>{comment.content}</p>
-                    <small className="text-secondary">
-                      {new Date(comment.createdAt).toLocaleDateString()}
-                    </small>
-                  </>
-                )}
-              </li>
-            ))}
+  <li key={comment.id}>
+    <CommentCard
+      comment={comment}
+      isEditing={editingComment === comment.id}
+      onEdit={(newContent) => handleEditComment(comment.id, newContent)}
+      onDelete={() => handleDeleteComment(comment.id)}
+      onStartEdit={() => setEditingComment(comment.id)}
+      onCancelEdit={() => setEditingComment(null)}
+      onLike={() => handleLike(comment.id)}
+      onDislike={() => handleDislike(comment.id)}
+    />
+  </li>
+))}
+
+             
           </ul>
         )}
       </section>
