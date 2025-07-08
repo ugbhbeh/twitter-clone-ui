@@ -1,0 +1,16 @@
+the login, sign up, create post and view post stuff is done.
+
+features to be added 
+- top bar that shows 
+    setting to be able to delete account
+    logout, to logout from this session
+- side bar that shows your profile and takes you to a page to edit that stuff 
+  - add an avatar, change your profile name 
+
+- btns to like and dislike a post [done]
+- btns to edit or delete your own post [done]
+- ability to click on a post and see its comments [done]
+- ability to create comments [done]
+- ability to like and dislike comments [done]
+- ability to edit / delete your own comments [done]
+
