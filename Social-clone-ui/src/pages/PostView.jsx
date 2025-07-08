@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import CommentCard from "../components/CommentCard";
-import api from "../api/api";
+import api from "../services/api";
 
 export default function PostView() {
   const { Id } = useParams();
