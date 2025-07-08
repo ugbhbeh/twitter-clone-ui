@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import CommentCard from "../components/CommentCard";
 import api from "../api/api";
@@ -15,14 +15,14 @@ export default function PostView() {
   const [postContent, setPostContent] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  // Replace with actual user ID from context or auth state
-  const currentUserId = localStorage.getItem("userId");
+  const dropdownRef = useRef(null);
+  
 
   const fetchPostWithComments = useCallback(async () => {
     try {
       const res = await api.get(`/posts/${Id}`);
       setPost(res.data);
-      setPostContent(res.data.content); // For editing
+      setPostContent(res.data.content);
       setError("");
     } catch (err) {
       setError(err.response?.data?.error || "Error loading page");
@@ -32,6 +32,23 @@ export default function PostView() {
   useEffect(() => {
     fetchPostWithComments();
   }, [fetchPostWithComments]);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
+        setDropdownOpen(false);
+      }
+    }
+    if (dropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownOpen]);
 
   const handleAddComment = async (e) => {
     e.preventDefault();
@@ -46,6 +63,7 @@ export default function PostView() {
 
   const handleEditPost = () => {
     setEditingPost(true);
+    setDropdownOpen(false);
   };
 
   const handleSavePost = async () => {
@@ -65,8 +83,9 @@ export default function PostView() {
 
   const handleDeletePost = async () => {
     try {
+       setShowDeleteModal(false);
       await api.delete(`/posts/${post.id}`);
-      navigate("/"); // Or redirect to feed page
+      navigate("/", { replace: true });
     } catch (err) {
       setError(err.response?.data?.error || "Failed to delete post");
     }
@@ -114,8 +133,8 @@ export default function PostView() {
   if (!post) return <div>Loading ...</div>;
 
   return (
-    <div className="post-grid">
-      {error && <div className="error-message">{error}</div>}
+    <div>
+      {error && <div>{error}</div>}
 
       <article>
         {editingPost ? (
@@ -136,28 +155,41 @@ export default function PostView() {
             <div>
               By {post.author?.username || "Unknown"} •{" "}
               {new Date(post.createdAt).toLocaleDateString()}
-              {post.author?.id === currentUserId && (
-                <div style={{ display: "inline-block", marginLeft: "10px" }}>
-                  <button onClick={() => setDropdownOpen((prev) => !prev)}>⋮</button>
+               
+                <div
+                  ref={dropdownRef}
+                  style={{ display: "inline-block", marginLeft: "10px" }}
+                >
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDropdownOpen((prev) => !prev);
+                    }}
+                  >
+                    ⋮
+                  </button>
                   {dropdownOpen && (
                     <div>
-                      <button onClick={() => { setDropdownOpen(false); handleEditPost(); }}>
-                        Edit
-                      </button>
-                      <button onClick={() => { setDropdownOpen(false); setShowDeleteModal(true); }}>
+                      <button onClick={handleEditPost}>Edit</button>
+                      <button
+                        onClick={() => {
+                          setDropdownOpen(false);
+                          setShowDeleteModal(true);
+                        }}
+                      >
                         Delete
                       </button>
                     </div>
                   )}
                 </div>
-              )}
+              
             </div>
             <p>{post.content}</p>
           </>
         )}
       </article>
 
-      <section className="comments-section">
+      <section>
         <form onSubmit={handleAddComment}>
           <textarea
             value={newComment}
@@ -179,7 +211,9 @@ export default function PostView() {
                 <CommentCard
                   comment={comment}
                   isEditing={editingComment === comment.id}
-                  onEdit={(newContent) => handleEditComment(comment.id, newContent)}
+                  onEdit={(newContent) =>
+                    handleEditComment(comment.id, newContent)
+                  }
                   onDelete={() => handleDeleteComment(comment.id)}
                   onStartEdit={() => setEditingComment(comment.id)}
                   onCancelEdit={() => setEditingComment(null)}
@@ -193,8 +227,8 @@ export default function PostView() {
       </section>
 
       {showDeleteModal && (
-        <div className="modal">
-          <div className="modal-content">
+        <div>
+          <div>
             <p>Are you sure you want to delete this post?</p>
             <button onClick={handleDeletePost}>Yes, Delete</button>
             <button onClick={() => setShowDeleteModal(false)}>Cancel</button>
