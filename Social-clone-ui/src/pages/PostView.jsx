@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useState, useRef, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import CommentCard from "../components/CommentCard";
 import api from "../services/api";
+import { AuthContext } from "../services/AuthContext";
 
 export default function PostView() {
   const { Id } = useParams();
@@ -14,6 +15,7 @@ export default function PostView() {
   const [editingPost, setEditingPost] = useState(false);
   const [postContent, setPostContent] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const { isLoggedIn, userId } = useContext(AuthContext);
 
   const dropdownRef = useRef(null);
   
@@ -32,6 +34,14 @@ export default function PostView() {
   useEffect(() => {
     fetchPostWithComments();
   }, [fetchPostWithComments]);
+
+  useEffect(() => {
+  if (post) {
+    console.log("Post.author:", post.authorId, "Type:", typeof post.authorId);
+    console.log("Logged in userId:", userId, "Type:", typeof userId);
+  }
+}, [post, userId]);
+
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -156,6 +166,7 @@ export default function PostView() {
               By {post.author?.username || "Unknown"} •{" "}
               {new Date(post.createdAt).toLocaleDateString()}
                
+               {isLoggedIn && userId === post.authorId &&(
                 <div
                   ref={dropdownRef}
                   style={{ display: "inline-block", marginLeft: "10px" }}
@@ -180,10 +191,12 @@ export default function PostView() {
                         Delete
                       </button>
                     </div>
+                 
                   )}
                 </div>
-              
+               )}
             </div>
+            
             <p>{post.content}</p>
           </>
         )}
