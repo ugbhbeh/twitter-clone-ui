@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, useRef, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import CommentCard from "../components/CommentCard";
 import api from "../services/api";
-import { AuthContext } from "../services/AuthContext";
+import AuthContext  from "../services/AuthContext";
 
 export default function PostView() {
   const { Id } = useParams();

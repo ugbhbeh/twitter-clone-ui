@@ -3,7 +3,7 @@ import Home from './pages/Home'
 import Login from './components/Login'
 import Signup from './components/Signup'
 import PostView from './pages/PostView'
-import { AuthProvider } from './services/AuthContext'
+import  AuthProvider  from './services/AuthProvider'
 import TopBar from './components/TopBar'
 import { useState, useEffect } from 'react';
 import { BrowserRouter} from 'react-router-dom';
