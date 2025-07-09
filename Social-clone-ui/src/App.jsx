@@ -6,6 +6,7 @@ import PostView from './pages/PostView'
 import { AuthProvider } from './services/AuthContext'
 import TopBar from './components/TopBar'
 import { useState, useEffect } from 'react';
+import { BrowserRouter} from 'react-router-dom';
 import './App.css'
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
   }, []);
 
   return (
+     <BrowserRouter>
       <AuthProvider>
         <TopBar />
       <Routes>
@@ -29,6 +31,7 @@ function App() {
          <Route path="/posts/:Id" element={<PostView />} />
         </Routes>
     </AuthProvider>
+    </BrowserRouter>
   )
 }
 
