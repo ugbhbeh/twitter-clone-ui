@@ -6,7 +6,6 @@ import SideBar from '../components/SideBar'
 function Home() {
 return (
     <div className='app-layout'>
-        <TopBar/>
 
         <div className='main-content'>
             <SideBar/>

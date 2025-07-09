@@ -3,6 +3,8 @@ import Home from './pages/Home'
 import Login from './components/Login'
 import Signup from './components/Signup'
 import PostView from './pages/PostView'
+import { AuthProvider } from './services/AuthContext'
+import TopBar from './components/TopBar'
 import { useState, useEffect } from 'react';
 import './App.css'
 
@@ -18,14 +20,15 @@ function App() {
   }, []);
 
   return (
-    
+      <AuthProvider>
+        <TopBar />
       <Routes>
         <Route path="/" element={<Home isAuthenticated={isAuthenticated} /> } />
         <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to ="/" /> } />
         <Route path="/signup" element={!isAuthenticated ? <Signup /> : <Navigate to ="/" /> } />
          <Route path="/posts/:Id" element={<PostView />} />
         </Routes>
-    
+    </AuthProvider>
   )
 }
 
