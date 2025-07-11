@@ -1,11 +1,41 @@
 the login, sign up, create post and view post stuff is done.
 
 features to be added 
+
 - top bar that shows 
     setting to be able to delete account
     logout, to logout from this session
-- side bar that shows your profile and takes you to a page to edit that stuff 
-  - add an avatar, change your profile name 
+
+- side bar 
+  - takes you to a profile page with a bio and profile image
+  - shows all the posts made by that user 
+  - crud ability for bio
+  - most likes posts 
+  - most followed users 
+
+- home page feed 
+ - if logged in call route to get posts for people you follow 
+
+- followers 
+ - add page see all users and if you follow them or now 
+ - bt to accept pending request and a page to see pending request.
+ - add btns to follow or unfollow a user everywhere applicable
+ - 
+
+log in page 
+ - ability to log in as guest 
+ - ability to log in with github
+
+
+
+
+
+
+
+
+
+
+
 
 - btns to like and dislike a post [done]
 - btns to edit or delete your own post [done]
