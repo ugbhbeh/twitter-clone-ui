@@ -63,7 +63,7 @@ if (loading) return <div>Loading ...</div>
 if (error) return <div>{error}</div>
 if (!profile) return <div>No data</div>
 
-const isOwnProfile = profile.id === JSON.parse(localStorage.getItem('userId'))?.id;
+const isOwnProfile = profile.id === localStorage.getItem('userId');
 
 return (
     <div>
