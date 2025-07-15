@@ -3,38 +3,34 @@ import AuthContext from "./AuthContext";
 
 export default function AuthProvider({ children }) {
   const [userId, setUserId] = useState(null);
-  const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
     const token = localStorage.getItem("token");
+    const storedUserId = localStorage.getItem("userId");
 
-    if (token && storedUser) {
-      setUserId(storedUser.id);
-      setUser(storedUser);
+    if (token && storedUserId) {
+      setUserId(storedUserId);
       setIsLoggedIn(true);
     }
   }, []);
 
-  function login(user, token) {
-    localStorage.setItem("user", JSON.stringify(user));
+  function login(userId, token) {
+    localStorage.setItem("userId", userId);
     localStorage.setItem("token", token);
-    setUserId(user.id);
-    setUser(user);
+    setUserId(userId);
     setIsLoggedIn(true);
   }
 
   function logout() {
-    localStorage.removeItem("user");
+    localStorage.removeItem("userId");
     localStorage.removeItem("token");
     setUserId(null);
-    setUser(null);
     setIsLoggedIn(false);
   }
 
   return (
-    <AuthContext.Provider value={{ userId, user, isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ userId, isLoggedIn, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

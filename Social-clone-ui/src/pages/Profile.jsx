@@ -1,11 +1,12 @@
-/* eslint-disable no-unused-vars */
+
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../services/api";
-
+import PostCard from "../components/PostCard";
 
 export default function Profile(){
-    const {username} = useParams();
+    const {userId} = useParams();
+    console.log(userId)
     const [profile, setProfile] = useState(null);
     const [bioEditing, setBioEditing] = useState(false);
     const [bioInput, setBioInput] = useState('');
@@ -14,13 +15,12 @@ export default function Profile(){
 
     useEffect(() => {
         fetchProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [username]);
+    }, [userId]);
 
     async function fetchProfile() {
         setLoading(true);
         try {
-            const res = await api.get(`/users/${username}/profile`);
+            const res = await api.get(`/users/${userId}/profile`);
             setProfile(res.data);
             console.log(res.data)
             setBioInput(res.data.bio || '');
@@ -33,7 +33,7 @@ export default function Profile(){
 
 async function handleFollow() {
     try {
-        await api.post(`users/${username}/follow`);
+        await api.post(`users/${userId}/follow`);
         await fetchProfile()
     } catch {
         alert('Follow failed')
@@ -42,7 +42,7 @@ async function handleFollow() {
 
 async function handleUnFollow() {
     try {
-        await api.post(`users/${username}/unfollow`);
+        await api.delete(`users/${userId}/unfollow`);
         await fetchProfile()
     } catch {
         alert('Unfollow failed')
@@ -51,7 +51,7 @@ async function handleUnFollow() {
 
 async function handleBioUpdate() {
     try {
-        api.patch(`/users/me/bio`, {bio: bioInput});
+        await api.patch(`/users/me/bio`, {bio: bioInput});
         setBioEditing(false);
         await fetchProfile()
     } catch {
@@ -63,7 +63,7 @@ if (loading) return <div>Loading ...</div>
 if (error) return <div>{error}</div>
 if (!profile) return <div>No data</div>
 
-const isOwnProfile = profile.id === JSON.parse(localStorage.getItem('user'))?.id;
+const isOwnProfile = profile.id === JSON.parse(localStorage.getItem('userId'))?.id;
 
 return (
     <div>
