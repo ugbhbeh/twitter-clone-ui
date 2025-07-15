@@ -3,6 +3,7 @@ import Home from './pages/Home'
 import Login from './components/Login'
 import Signup from './components/Signup'
 import PostView from './pages/PostView'
+import Profile from './pages/Profile'
 import  AuthProvider  from './services/AuthProvider'
 import TopBar from './components/TopBar'
 import { useState, useEffect } from 'react';
@@ -28,7 +29,8 @@ function App() {
         <Route path="/" element={<Home isAuthenticated={isAuthenticated} /> } />
         <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to ="/" /> } />
         <Route path="/signup" element={!isAuthenticated ? <Signup /> : <Navigate to ="/" /> } />
-         <Route path="/posts/:Id" element={<PostView />} />
+        <Route path="/posts/:Id" element={<PostView />} />
+         <Route path="/profile/:username" element={<Profile />} />
         </Routes>
     </AuthProvider>
     </BrowserRouter>

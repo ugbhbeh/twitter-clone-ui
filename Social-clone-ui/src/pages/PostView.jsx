@@ -36,14 +36,6 @@ export default function PostView() {
   }, [fetchPostWithComments]);
 
   useEffect(() => {
-  if (post) {
-    console.log("Post.author:", post.authorId, "Type:", typeof post.authorId);
-    console.log("Logged in userId:", userId, "Type:", typeof userId);
-  }
-}, [post, userId]);
-
-
-  useEffect(() => {
     function handleClickOutside(event) {
       if (
         dropdownRef.current &&

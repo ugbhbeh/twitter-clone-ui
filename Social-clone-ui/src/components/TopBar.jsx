@@ -22,6 +22,10 @@ export default  function TopBar() {
                  <button>Login</button>
                 </Link>
             )}
+
+             <Link to="/profile">
+                 <button>Profile</button>
+                </Link>
         </div>
 
     );  
