@@ -16,7 +16,7 @@ export default function PostCard({post, onLike, onDislike}) {
 
          <div>
             <button onClick={() => onLike?.(post.id)}> 👍 {likeCount} </button>
-            <button onClick={() => onDislike?.(post.id)}> 👍 {dislikeCount}  </button>
+            <button onClick={() => onDislike?.(post.id)}> 👎 {dislikeCount}  </button>
          </div>        
         </div>
 )

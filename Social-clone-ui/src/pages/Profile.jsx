@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../services/api";
@@ -13,6 +14,7 @@ export default function Profile(){
 
     useEffect(() => {
         fetchProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [username]);
 
     async function fetchProfile() {
@@ -20,7 +22,7 @@ export default function Profile(){
         try {
             const res = await api.get(`/users/${username}/profile`);
             setProfile(res.data);
-            console.log(setProfile)
+            console.log(res.data)
             setBioInput(res.data.bio || '');
         } catch (error) {
             setError('Failed to load profile')
@@ -64,8 +66,58 @@ if (!profile) return <div>No data</div>
 const isOwnProfile = profile.id === JSON.parse(localStorage.getItem('user'))?.id;
 
 return (
+    <div>
+        <h1>{profile.username}'s Profile'</h1>
 
-)
+        <div>
+            <img src={profile.profileImage} alt="profile" width={100} height={100}/>
+        </div>
+
+        <div>
+            <strong>Bio:</strong>
+            {bioEditing ? (
+                <div>
+                    <textarea value={bioInput} onChange={(e) => setBioInput(e.target.value)} />
+                    <button onClick={handleBioUpdate}>Save</button>
+                    <button onClick={() => setBioEditing(false)}>Cancel</button>
+                </div>
+            ) : (
+                <div>
+                    <p>{profile.bio || 'write your bio'}</p>
+                    {isOwnProfile && <button onClick={() => setBioEditing(true)}>Edit bio</button>}
+                </div>
+            )}
+        </div>
+        <div>
+            <p>Followers: {profile.followerCount}</p>
+            <p>Following: {profile.followingCount}</p>
+        </div>
+
+        {!isOwnProfile && (profile.isFollowing? (
+                <button onClick={handleUnFollow}>Unfollow</button>
+            ) : (
+                <button onClick={handleFollow}>Follow</button>
+            )
+        )}
+
+      <hr />
+      {profile.posts.map(post => (
+      <PostCard
+        key={post.id}
+        post={post}
+    />
+))}
+
+
+
+
+
+
+
+
+    </div>
+
+);
 
 
 
