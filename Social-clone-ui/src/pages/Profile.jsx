@@ -6,7 +6,6 @@ import PostCard from "../components/PostCard";
 
 export default function Profile(){
     const {userId} = useParams();
-    console.log(userId)
     const [profile, setProfile] = useState(null);
     const [bioEditing, setBioEditing] = useState(false);
     const [bioInput, setBioInput] = useState('');
@@ -32,7 +31,9 @@ export default function Profile(){
 
 async function handleFollow() {
     try {
-        await api.post(`users/${userId}/follow`);
+        await api.post(`/users/${userId}/follow`);
+        console.log(profile.id);
+        console.log(userId)
         await fetchProfile()
     } catch {
         alert('Follow failed')
@@ -41,7 +42,7 @@ async function handleFollow() {
 
 async function handleUnFollow() {
     try {
-        await api.delete(`users/${userId}/unfollow`);
+        await api.delete(`/users/${userId}/unfollow`);
         await fetchProfile()
     } catch {
         alert('Unfollow failed')
@@ -57,6 +58,24 @@ async function handleBioUpdate() {
         alert("Failed to update bio")
     }   
 }
+
+const handleLike = async (postId) => {
+  try {
+    await api.post(`/posts/${postId}/like`);
+    await fetchProfile();  // <--- call fetchProfile here to update UI
+  } catch (err) {
+    console.error("Failed to like post", err);
+  }
+};
+
+const handleDislike = async (postId) => {
+  try {
+    await api.post(`/posts/${postId}/dislike`);
+    await fetchProfile();  // <--- call fetchProfile here as well
+  } catch (err) {
+    console.log("Failed to dislike post", err);
+  }
+};
 
 if (loading) return <div>Loading ...</div>
 if (error) return <div>{error}</div>
@@ -104,14 +123,10 @@ return (
       <PostCard
         key={post.id}
         post={post}
+        onLike={handleLike}
+        onDislike={handleDislike}
     />
 ))}
-
-
-
-
-
-
 
 
     </div>
