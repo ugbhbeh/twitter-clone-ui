@@ -22,7 +22,6 @@ export default function Profile(){
         try {
             const res = await api.get(`/users/${userId}/profile`);
             setProfile(res.data);
-            console.log(res.data)
             setBioInput(res.data.bio || '');
         } catch (error) {
             setError('Failed to load profile')

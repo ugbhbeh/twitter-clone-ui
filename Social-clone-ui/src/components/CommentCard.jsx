@@ -1,4 +1,5 @@
 import { useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import AuthContext from "../services/AuthContext";
 
 export default function CommentCard({
@@ -10,8 +11,6 @@ export default function CommentCard({
   onDelete,
   onLike,
   onDislike,
-  
-
 }) 
 
 {
@@ -26,7 +25,9 @@ export default function CommentCard({
   return (
     <div>
       <div>
+        <Link to={`/profile/${comment.author?.id}`}>
         <span>{comment.author?.username || "Unknown"}</span> •{" "}
+        </Link>
         <small>{new Date(comment.createdAt).toLocaleString()}</small>
         {isAuthor && (
         <button onClick={() => setDropdownOpen((prev) => !prev)}>⋮</button>

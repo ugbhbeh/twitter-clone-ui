@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, useRef, useContext } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link} from "react-router-dom";
 import CommentCard from "../components/CommentCard";
 import api from "../services/api";
 import AuthContext  from "../services/AuthContext";
@@ -155,7 +155,11 @@ export default function PostView() {
           <>
             <h1>{post.title}</h1>
             <div>
-              By {post.author?.username || "Unknown"} •{" "}
+             By{" "}
+                  <Link to={`/profile/${post.author?.id}`}>
+                    {post.author?.username || "Unknown"}
+                  </Link>{" "}
+                  •{" "}
               {new Date(post.createdAt).toLocaleDateString()}
                
                {isLoggedIn && userId === post.authorId &&(
