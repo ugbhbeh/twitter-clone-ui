@@ -11,10 +11,17 @@ export default function TopBar() {
     navigate("/");
   };
 
+  const handlehome = () => {
+    navigate("/")
+  }
+
   const userId = localStorage.getItem("userId");
 
   return (
     <div>
+      <div>
+        <button onClick={handlehome}> Home</button>
+      </div>
       {isLoggedIn ? (
         <>
           <button onClick={handleLogout}>Logout</button>
@@ -30,5 +37,7 @@ export default function TopBar() {
         </Link>
       )}
     </div>
+
+    
   );
 }
