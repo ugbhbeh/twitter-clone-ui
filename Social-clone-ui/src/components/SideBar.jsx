@@ -5,7 +5,6 @@ export default  function SideBar() {
     return (
     <aside>
       <MostPopularPosts />
-      <MostFollowedUsers />
     </aside>
   );
     

@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import SidebarPosts from "./SidebarPostcard";
 import api from "../services/api";
 import SidebarPostCard from "./SidebarPostcard";
 
-export default function PostFeed() {
+export default function MostPopularPosts() {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
