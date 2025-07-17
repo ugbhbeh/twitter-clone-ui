@@ -1,6 +1,12 @@
+import MostFollowedUsers from "./MostFollowedUsers";
+import MostPopularPosts from "./MostPopularPosts"
+
 export default  function SideBar() {
     return (
-        <div>hello</div>
-)
+    <aside>
+      <MostPopularPosts />
+      <MostFollowedUsers />
+    </aside>
+  );
     
 }

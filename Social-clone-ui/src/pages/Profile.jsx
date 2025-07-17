@@ -32,8 +32,6 @@ export default function Profile(){
 async function handleFollow() {
     try {
         await api.post(`/users/${userId}/follow`);
-        console.log(profile.id);
-        console.log(userId)
         await fetchProfile()
     } catch {
         alert('Follow failed')
@@ -62,7 +60,7 @@ async function handleBioUpdate() {
 const handleLike = async (postId) => {
   try {
     await api.post(`/posts/${postId}/like`);
-    await fetchProfile();  // <--- call fetchProfile here to update UI
+    await fetchProfile();  
   } catch (err) {
     console.error("Failed to like post", err);
   }
@@ -71,7 +69,7 @@ const handleLike = async (postId) => {
 const handleDislike = async (postId) => {
   try {
     await api.post(`/posts/${postId}/dislike`);
-    await fetchProfile();  // <--- call fetchProfile here as well
+    await fetchProfile();  
   } catch (err) {
     console.log("Failed to dislike post", err);
   }
@@ -127,8 +125,6 @@ return (
         onDislike={handleDislike}
     />
 ))}
-
-
     </div>
 
 );
