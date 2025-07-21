@@ -1,27 +1,33 @@
-import { useState } from "react";           
+import { useLocation, useNavigate } from "react-router-dom";          
 import PopularPosts from "../components/PopularPosts";
 import PopularUsers from "../components/PopularUsers";
 
-export default function Explore(){
-    const [view, setView] = useState('posts');
+export default function Explore() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const params = new URLSearchParams(location.search);
+  const section = params.get('section') || 'posts';
 
-    return (
-        <div>
+  const handleSectionChange = (value) => {
+    navigate(`/explore?section=${value}`);
+  };
+
+  return (
+    <div>
       <div>
-        <button
-          onClick={() => setView("posts")}
-        >
-            Top Posts
+        <button onClick={() => handleSectionChange("posts")}>
+          Top Posts
         </button>
-        <button
-          onClick={() => setView("users")}
-        >
+        <button onClick={() => handleSectionChange("users")}>
           Top Users
         </button>
       </div>
 
-      {view === "posts" ? <PopularPosts /> : <PopularUsers />}
+      {section === 'users' ? (
+        <PopularUsers />
+      ) : (
+        <PopularPosts />
+      )}
     </div>
   );
-    
 }
