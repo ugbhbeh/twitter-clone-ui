@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 import SidebarPostCard from "./SidebarPostcard";
 
-export default function MostPopularPosts() {
+export default function PopularPosts() {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
@@ -11,7 +11,7 @@ export default function MostPopularPosts() {
       setError('');
       setLoading(true);
       try {
-        const response = await api.get('/posts/popular?');
+        const response = await api.get('/posts/popular?limit=25');
         setPosts(response.data);
       } catch (error) {
         setError('Failed to fetch posts. Please try again.');

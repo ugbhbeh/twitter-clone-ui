@@ -1,5 +1,5 @@
-import MostFollowedUsers from "./MostFollowedUsers";
-import MostPopularPosts from "./MostPopularPosts"
+import MostFollowedUsers from "./PopularUsersPreview";
+import MostPopularPosts from "./PopularPostsPreview"
 
 export default  function SideBar() {
     return (
