@@ -11,7 +11,7 @@ export default function MostPopularPosts() {
       setError('');
       setLoading(true);
       try {
-        const response = await api.get('/posts/popular');
+        const response = await api.get('/posts/popular?');
         setPosts(response.data);
       } catch (error) {
         setError('Failed to fetch posts. Please try again.');
