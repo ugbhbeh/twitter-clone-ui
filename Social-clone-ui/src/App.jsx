@@ -6,7 +6,6 @@ import PostView from './pages/PostView'
 import Profile from './pages/Profile'
 import AuthProvider  from './services/AuthProvider'
 import TopBar from './components/TopBar'
-import Explore from"./pages/Explore"
 import { useState, useEffect } from 'react';
 import './App.css'
 
@@ -30,7 +29,6 @@ function App() {
         <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to ="/" /> } />
         <Route path="/signup" element={!isAuthenticated ? <Signup /> : <Navigate to ="/" /> } />
         <Route path="/posts/:Id" element={<PostView />} />
-         <Route path="/explore" element={<Explore/>} />
          <Route path="/profile/:userId" element={<Profile />} />
         </Routes>
     </AuthProvider>
