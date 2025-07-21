@@ -49,6 +49,7 @@ export default function MostFollowedUsers() {
           </div>
         </div>
       ))}
+      <Link to="/explore?section=users">View All Users</Link>
     </div>
   );
 }

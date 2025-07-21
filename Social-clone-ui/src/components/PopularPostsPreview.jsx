@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../services/api";
 import SidebarPostCard from "./SidebarPostcard";
 
@@ -38,6 +39,7 @@ export default function MostPopularPosts() {
                 < SidebarPostCard key={post.id} post={post} />
         ))
       )}
-      </div>   
+      <Link to="/explore?section=users">View All Users</Link>
+      </div>     
     );
 }
