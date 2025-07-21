@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import AuthContext from "../services/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import Explore from "../pages/Explore";
 
 export default function TopBar() {
   const { isLoggedIn, logout } = useContext(AuthContext);
@@ -12,8 +13,12 @@ export default function TopBar() {
   };
 
   const handlehome = () => {
-    navigate("/")
-  }
+    navigate("/");
+  };
+
+  const handleExplore = () => {
+    navigate("/explore");
+  };
 
   const userId = localStorage.getItem("userId");
 
@@ -21,6 +26,9 @@ export default function TopBar() {
     <div>
       <div>
         <button onClick={handlehome}> Home</button>
+      </div>
+      <div>
+        <button onClick={handleExplore}> Explore</button>
       </div>
       {isLoggedIn ? (
         <>
