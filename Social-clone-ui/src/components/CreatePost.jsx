@@ -27,15 +27,32 @@ export default  function CreatePost() {
    };
 
    return (
-    <div>
-        <h2>Create new post</h2>
-        {error && <div>{error}</div>}
-        <form onSubmit={handleSubmit}>
+    <div className="card-social p-6">
+        <h2 className="text-xl font-semibold text-secondary mb-4">Create new post</h2>
+        {error && (
+          <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-4">
+            {error}
+          </div>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-                <label> Content </label>
-                <textarea value={content} onChange={(e) => setContent(e.target.value)} rows={10} required/>
+                <label className="block text-accent mb-2">
+                  What's on your mind?
+                </label>
+                <textarea 
+                  value={content} 
+                  onChange={(e) => setContent(e.target.value)} 
+                  rows={5}
+                  className="input-social min-h-[120px] resize-none"
+                  placeholder="Share your thoughts..."
+                  required
+                />
             </div>
-            <button type='submit'>Create Post</button>
+            <div className="flex justify-end">
+              <button type='submit' className="btn-primary">
+                Post
+              </button>
+            </div>
         </form>
     </div>
    )

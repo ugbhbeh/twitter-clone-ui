@@ -29,15 +29,44 @@ function Login() {
     };
 
     return (
-        <div className="auth-container">
-        <form onSubmit={handleSubmit} className="auth-form">
-            <h2>Login</h2>
-            <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required/>
-            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-            <button type="submit">Login</button>
-            <p> Don't have an account? <Link to="/signup">Sign up</Link> </p>
-            </form>
+        <div className="min-h-[80vh] flex items-center justify-center">
+            <div className="card-social w-full max-w-md p-8">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <h2 className="text-2xl font-bold text-center text-secondary mb-8">Welcome Back</h2>
+                    <div className="space-y-4">
+                        <div>
+                            <input 
+                                type="email" 
+                                placeholder="Email" 
+                                value={email} 
+                                onChange={(e) => setEmail(e.target.value)} 
+                                className="input-social"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <input 
+                                type="password" 
+                                placeholder="Password" 
+                                value={password} 
+                                onChange={(e) => setPassword(e.target.value)} 
+                                className="input-social"
+                                required 
+                            />
+                        </div>
+                    </div>
+                    <button type="submit" className="btn-primary w-full">
+                        Login
+                    </button>
+                    <p className="text-center text-accent mt-4">
+                        Don't have an account?{' '}
+                        <Link to="/signup" className="text-primary hover:text-primary/90">
+                            Sign up
+                        </Link>
+                    </p>
+                </form>
             </div>
+        </div>
     );
 }
 export default Login;

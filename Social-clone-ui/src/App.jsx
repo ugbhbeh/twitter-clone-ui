@@ -24,16 +24,20 @@ function App() {
   return (
      <BrowserRouter>
       <AuthProvider>
-        <TopBar />
-      <Routes>
-        <Route path="/" element={<Home isAuthenticated={isAuthenticated} /> } />
-        <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to ="/" /> } />
-        <Route path="/signup" element={!isAuthenticated ? <Signup /> : <Navigate to ="/" /> } />
-        <Route path="/posts/:Id" element={<PostView />} />
-         <Route path="/explore" element={<Explore/>} />
-         <Route path="/profile/:userId" element={<Profile />} />
-        </Routes>
-    </AuthProvider>
+        <div className="min-h-screen bg-background">
+          <TopBar className="sticky top-0 z-50" />
+          <main className="container-app py-6">
+            <Routes>
+              <Route path="/" element={<Home isAuthenticated={isAuthenticated} /> } />
+              <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to ="/" /> } />
+              <Route path="/signup" element={!isAuthenticated ? <Signup /> : <Navigate to ="/" /> } />
+              <Route path="/posts/:Id" element={<PostView />} />
+              <Route path="/explore" element={<Explore/>} />
+              <Route path="/profile/:userId" element={<Profile />} />
+            </Routes>
+          </main>
+        </div>
+      </AuthProvider>
     </BrowserRouter>
   )
 }
