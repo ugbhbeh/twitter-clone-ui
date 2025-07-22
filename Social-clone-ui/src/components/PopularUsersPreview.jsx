@@ -30,26 +30,27 @@ export default function MostFollowedUsers() {
   if (users.length === 0) return <p>No users found.</p>;
 
   return (
-    <div>
+    <div className="flex flex-col gap-3">
       {users.map(user => (
-        <div key={user.id} >
-          <Link to={`/profile/${user.id}`}>
+        <div key={user.id} className="flex items-center gap-3 bg-surface rounded-lg shadow p-2 hover:shadow-md transition-shadow">
+          <Link to={`/profile/${user.id}`} className="flex-shrink-0">
             <img 
               src={user.profileImage || '/default-profile.png'} 
               alt={`${user.username}'s profile`} 
+              className="w-10 h-10 rounded-full object-cover border border-accent/20"
             />
           </Link>
-          <div>
-            <Link to={`/profile/${user.id}`}>
+          <div className="flex-1 min-w-0">
+            <Link to={`/profile/${user.id}`} className="font-medium text-secondary hover:text-primary truncate">
               {user.username}
             </Link>
-            <div>
+            <div className="text-xs text-accent truncate">
               Followers: {user.followerCount ?? 0}
             </div>
           </div>
         </div>
       ))}
-      <Link to="/explore?section=users">View All Users</Link>
+      <Link to="/explore?section=users" className="block text-primary text-sm mt-2 hover:underline">View All Users</Link>
     </div>
   );
 }

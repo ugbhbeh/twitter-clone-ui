@@ -31,15 +31,15 @@ export default function MostPopularPosts() {
     if (error) return <div style={{color: 'red'}}>{error}</div>;
   
     return (
-      <div>
+      <div className="flex flex-col gap-3">
         {posts.length === 0 ? (
-          <p>No posts available.</p>
+          <p className="text-accent">No posts available.</p>
         ) : (
-              posts.map(post => (
-                < SidebarPostCard key={post.id} post={post} />
-        ))
-      )}
-      <Link to="/explore?section=users">View All Users</Link>
-      </div>     
+          posts.map(post => (
+            <SidebarPostCard key={post.id} post={post} />
+          ))
+        )}
+        <Link to="/explore?section=users" className="block text-primary text-sm mt-2 hover:underline">View All Posts</Link>
+      </div>
     );
 }

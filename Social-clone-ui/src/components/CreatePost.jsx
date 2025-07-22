@@ -43,13 +43,13 @@ export default  function CreatePost() {
                   value={content} 
                   onChange={(e) => setContent(e.target.value)} 
                   rows={5}
-                  className="input-social min-h-[120px] resize-none"
+                  className="input-social min-h-[120px] resize-none bg-surface text-secondary border border-accent/30 focus:border-primary placeholder:text-accent"
                   placeholder="Share your thoughts..."
                   required
                 />
             </div>
             <div className="flex justify-end">
-              <button type='submit' className="btn-primary">
+              <button type='submit' className="btn btn-primary">
                 Post
               </button>
             </div>

@@ -4,16 +4,18 @@ export default function SidebarPostCard({ post }) {
       const contentPreview = post.content.length > 100 ? post.content.slice(0, 100) + "..." : post.content;
 
   return (
-    <div>
-      <div>
-        By{" "}
-        <Link to={`/profile/${post.author?.id}`}>
+    <div className="card-social p-4 mb-3 bg-surface rounded-lg shadow hover:shadow-md transition-shadow">
+      <div className="flex items-center space-x-2 mb-2 text-sm text-accent">
+        <span>By</span>
+        <Link to={`/profile/${post.author?.id}`} className="font-medium text-secondary hover:text-primary">
           {post.author?.username || "Unknown"}
-        </Link>{" "}
-        · {new Date(post.createdAt).toLocaleString()}
+        </Link>
+        <span>· {new Date(post.createdAt).toLocaleString()}</span>
       </div>
-      <Link to={`/posts/${post.id}`}>
-        <p>{contentPreview}</p>
+      <Link to={`/posts/${post.id}`} className="block group">
+        <p className="text-secondary group-hover:text-primary/90 transition-colors">
+          {contentPreview}
+        </p>
       </Link>
     </div>
   );

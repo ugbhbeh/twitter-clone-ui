@@ -3,20 +3,15 @@ import CreatePost from '../components/CreatePost';
 import SideBar from '../components/SideBar'
 
 function Home() {
-return (
-    <div className='app-layout'>
-
-        <div className='main-content'>
-            <SideBar/>
-
-            <div className='feed'>
-                <CreatePost/>
-                 <PostFeed/>
-                 
-                </div>
-            </div>
-        </div>
-)
+  return (
+    <div className="flex gap-8 max-w-7xl mx-auto px-4 py-8">
+      <div className="flex-1 min-w-0">
+        <CreatePost />
+        <PostFeed />
+      </div>
+      <SideBar />
+    </div>
+  );
 }
 
 export default Home;

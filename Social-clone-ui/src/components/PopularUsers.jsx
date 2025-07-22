@@ -30,20 +30,21 @@ export default function PopularUsers() {
   if (users.length === 0) return <p>No users found.</p>;
 
   return (
-    <div>
+    <div className="space-y-4">
       {users.map(user => (
-        <div key={user.id} >
-          <Link to={`/profile/${user.id}`}>
+        <div key={user.id} className="card-social flex items-center p-4 bg-surface rounded-lg shadow hover:shadow-md transition-shadow">
+          <Link to={`/profile/${user.id}`} className="mr-4">
             <img 
               src={user.profileImage || '/default-profile.png'} 
               alt={`${user.username}'s profile`} 
+              className="w-12 h-12 rounded-full object-cover border border-accent/30"
             />
           </Link>
-          <div>
-            <Link to={`/profile/${user.id}`}>
+          <div className="flex-1">
+            <Link to={`/profile/${user.id}`} className="font-semibold text-secondary hover:text-primary">
               {user.username}
             </Link>
-            <div>
+            <div className="text-sm text-accent">
               Followers: {user.followerCount ?? 0}
             </div>
           </div>

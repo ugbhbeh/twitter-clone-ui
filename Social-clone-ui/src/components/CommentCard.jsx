@@ -23,25 +23,21 @@ export default function CommentCard({
   const isAuthor = userId === comment.author?.id;
 
   return (
-    <div>
-      <div>
-        <Link to={`/profile/${comment.author?.id}`}>
-        <span>{comment.author?.username || "Unknown"}</span> •{" "}
+    <div className="card-social p-4 mb-3 bg-surface rounded-lg shadow hover:shadow-md transition-shadow">
+      <div className="flex items-center space-x-2 mb-2 text-sm text-accent">
+        <Link to={`/profile/${comment.author?.id}`} className="font-medium text-secondary hover:text-primary">
+          {comment.author?.username || "Unknown"}
         </Link>
-        <small>{new Date(comment.createdAt).toLocaleString()}</small>
+        <span>· {new Date(comment.createdAt).toLocaleString()}</span>
         {isAuthor && (
-        <button onClick={() => setDropdownOpen((prev) => !prev)}>⋮</button>
+          <button onClick={() => setDropdownOpen((prev) => !prev)} className="btn btn-xs btn-ghost ml-auto">⋮</button>
         )}
         {dropdownOpen && isAuthor && (
-     <div>
-      <button onClick={() => { setDropdownOpen(false); onStartEdit(); }}>
-      Edit
-    </button>
-    <button onClick={() => { setDropdownOpen(false); onDelete(); }}>
-      Delete
-    </button>
-  </div>
-)}
+          <div className="absolute mt-2 right-0 bg-surface border border-accent/20 rounded shadow-lg z-10 flex flex-col">
+            <button onClick={() => { setDropdownOpen(false); onStartEdit(); }} className="btn btn-sm btn-outline btn-primary">Edit</button>
+            <button onClick={() => { setDropdownOpen(false); onDelete(); }} className="btn btn-sm btn-outline btn-error">Delete</button>
+          </div>
+        )}
       </div>
 
       {isEditing ? (
@@ -50,26 +46,28 @@ export default function CommentCard({
             e.preventDefault();
             onEdit(editContent);
           }}
+          className="space-y-2"
         >
           <textarea
             value={editContent}
             onChange={(e) => setEditContent(e.target.value)}
             rows="2"
             required
+            className="input-social bg-surface text-secondary border border-accent/30 focus:border-primary placeholder:text-accent min-h-[60px] resize-none"
           />
-          <div>
-            <button type="submit">Save</button>
-            <button type="button" onClick={onCancelEdit}>
+          <div className="flex space-x-2">
+            <button type="submit" className="btn btn-primary btn-sm">Save</button>
+            <button type="button" onClick={onCancelEdit} className="btn btn-outline btn-secondary btn-sm">
               Cancel
             </button>
           </div>
         </form>
       ) : (
         <>
-          <p>{comment.content}</p>
-          <div>
-            <button onClick={() => onLike?.(comment.id)}>👍 {likeCount}</button>
-            <button onClick={() => onDislike?.(comment.id)}>👎 {dislikeCount}</button>
+          <p className="text-secondary mb-2">{comment.content}</p>
+          <div className="flex items-center space-x-2">
+            <button onClick={() => onLike?.(comment.id)} className="btn btn-xs btn-outline btn-primary">👍 {likeCount}</button>
+            <button onClick={() => onDislike?.(comment.id)} className="btn btn-xs btn-outline btn-secondary">👎 {dislikeCount}</button>
           </div>
         </>
       )}

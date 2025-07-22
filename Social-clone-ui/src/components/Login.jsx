@@ -29,7 +29,7 @@ function Login() {
     };
 
     return (
-        <div className="min-h-[80vh] flex items-center justify-center">
+        <div className="min-h-[80vh] flex items-center justify-center bg-background">
             <div className="card-social w-full max-w-md p-8">
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <h2 className="text-2xl font-bold text-center text-secondary mb-8">Welcome Back</h2>
@@ -40,7 +40,7 @@ function Login() {
                                 placeholder="Email" 
                                 value={email} 
                                 onChange={(e) => setEmail(e.target.value)} 
-                                className="input-social"
+                                className="input-social bg-surface text-secondary border border-accent/30 focus:border-primary placeholder:text-accent"
                                 required
                             />
                         </div>
@@ -50,12 +50,12 @@ function Login() {
                                 placeholder="Password" 
                                 value={password} 
                                 onChange={(e) => setPassword(e.target.value)} 
-                                className="input-social"
+                                className="input-social bg-surface text-secondary border border-accent/30 focus:border-primary placeholder:text-accent"
                                 required 
                             />
                         </div>
                     </div>
-                    <button type="submit" className="btn-primary w-full">
+                    <button type="submit" className="btn btn-primary w-full">
                         Login
                     </button>
                     <p className="text-center text-accent mt-4">
