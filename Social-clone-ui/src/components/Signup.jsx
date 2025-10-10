@@ -68,7 +68,8 @@ function Signup() {
       localStorage.setItem('userId', data.userId);
       navigate('/');
     } catch (err) {
-      setError(err, 'Guest login failed. Please try again.');
+      setError( 'Guest login failed. Please try again.');
+      console.log(err)
     } finally {
       setIsSubmitting(false);
     }

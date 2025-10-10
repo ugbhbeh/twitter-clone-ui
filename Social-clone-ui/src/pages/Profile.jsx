@@ -23,7 +23,8 @@ export default function Profile(){
             setProfile(res.data);
             setBioInput(res.data.bio || '');
         } catch (error) {
-            setError(error,'Failed to load profile')
+            setError('Failed to load profile')
+            console.log(error)
         } finally {
             setLoading(false)
         }    
