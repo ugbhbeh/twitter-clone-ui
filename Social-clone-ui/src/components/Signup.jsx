@@ -57,7 +57,7 @@ function Signup() {
     setIsSubmitting(true);
     try {
       const res = await api.post('/users/guest');
-      console.log(res)
+  
 
       if (res.status !== 200) {
       throw new Error('Guest login failed');
@@ -68,8 +68,7 @@ function Signup() {
       localStorage.setItem('userId', data.userId);
       navigate('/');
     } catch (err) {
-      console.error('Guest login error:', err);
-      setError('Guest login failed. Please try again.');
+      setError(err, 'Guest login failed. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
