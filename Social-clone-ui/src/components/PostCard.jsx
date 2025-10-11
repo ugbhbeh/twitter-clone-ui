@@ -7,7 +7,7 @@ export default function PostCard({ post, onLike, onDislike }) {
   return (
     <article className="card-social p-6 mb-4">
       <div className="flex items-center space-x-3 mb-4">
-        {/* Profile Image */}
+   
         <Link to={`/profile/${post.author?.id}`}>
           <img
             src={post.author?.profileImage || "/images/default-avatar.png"}
