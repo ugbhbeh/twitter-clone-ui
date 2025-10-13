@@ -3,8 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
 import AuthContext from '../services/AuthContext';
 
-
-
 function Signup() { 
   const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({
@@ -42,7 +40,8 @@ function Signup() {
     try {
       const response = await api.post('/users', formData);
       if (response.status === 201) {
-        navigate('/login');
+                 login(response.data.userId, response.data.token);
+                navigate('/')
       }
     } catch (error) {
       if (error.response?.status === 409) {
