@@ -1,8 +1,12 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../services/api';
+import AuthContext from '../services/AuthContext';
 
-function Signup() {
+
+
+function Signup() { 
+  const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     email: '',
     username: '',
@@ -51,23 +55,21 @@ function Signup() {
     }
   };
 
-  // === Guest login handler ===
   const handleGuestLogin = async () => {
+    
     setError('');
     setIsSubmitting(true);
     try {
-      const res = await api.post('/users/guest');
-  
+      const response = await api.post('/users/guest');
 
-      if (res.status !== 200) {
+      if (response.status !== 200) {
       throw new Error('Guest login failed');
     }
-
-    const data = res.data;
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('userId', data.userId);
-      navigate('/');
-    } catch (err) {
+    
+    if (response.data.token && response.data.userId) {
+                 login(response.data.userId, response.data.token);
+                navigate('/')
+    }} catch (err) {
       setError( 'Guest login failed. Please try again.');
       console.log(err)
     } finally {
