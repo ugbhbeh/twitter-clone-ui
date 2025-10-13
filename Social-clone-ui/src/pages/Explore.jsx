@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";          
 import PopularPosts from "../components/PopularPosts";
 import PopularUsers from "../components/PopularUsers";
+import SuggestedUsers from "../components/SuggestedUsers";
 
 export default function Explore() {
   const location = useLocation();
@@ -27,10 +28,18 @@ export default function Explore() {
         >
           Top Users
         </button>
+        <button
+          onClick={() => handleSectionChange("suggested")}
+          className={`btn btn-primary px-6 py-2 font-semibold ${section === 'suggested' ? '' : 'btn-outline'}`}
+        >
+          Suggested Users
+        </button>
       </div>
 
       {section === 'users' ? (
         <PopularUsers />
+      ) : section === 'suggested' ? (
+        <SuggestedUsers />
       ) : (
         <PopularPosts />
       )}
