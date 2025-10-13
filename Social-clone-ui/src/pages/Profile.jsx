@@ -22,9 +22,10 @@ export default function Profile() {
       const res = await api.get(`/users/${userId}/profile`);
       setProfile(res.data);
       setBioInput(res.data.bio || "");
-    } catch (error) {
+      setError(null);
+    } catch (err) {
       setError("Failed to load profile");
-      console.error(error);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -48,23 +49,27 @@ export default function Profile() {
     }
   }
 
-  async function handleBlock() {
+  async function handleBlockToggle() {
     try {
-      await api.post(`/users/block/${userId}`);
-      setDropdownOpen(false);
-      await fetchProfile();
-    } catch {
-      alert("Failed to block user");
-    }
-  }
+      let res;
+      if (profile.isBlockedByCurrentUser) {
+        res = await api.delete(`/users/block/${userId}`);
+      } else {
+        res = await api.post(`/users/block/${userId}`);
+      }
 
-  async function handleUnblock() {
-    try {
-      await api.delete(`/users/block/${userId}`);
-      setDropdownOpen(false);
-      await fetchProfile();
-    } catch {
-      alert("Failed to unblock user");
+      if (res.data.success) {
+        setProfile(prev => ({
+          ...prev,
+          isBlockedByCurrentUser: !prev.isBlockedByCurrentUser
+        }));
+        setDropdownOpen(false);
+      } else {
+        alert("Failed to toggle block");
+      }
+    } catch (err) {
+      console.error("Block toggle failed", err);
+      alert("Failed to toggle block");
     }
   }
 
@@ -92,7 +97,7 @@ export default function Profile() {
       await api.post(`/posts/${postId}/dislike`);
       await fetchProfile();
     } catch (err) {
-      console.log("Failed to dislike post", err);
+      console.error("Failed to dislike post", err);
     }
   };
 
@@ -111,7 +116,7 @@ export default function Profile() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 relative">
-      {/* Header section */}
+      {/* Header */}
       <div className="flex flex-col md:flex-row items-center gap-6 mb-8 relative">
         <img
           src={profile.profileImage || "/default-profile.png"}
@@ -157,11 +162,11 @@ export default function Profile() {
           )}
         </div>
 
-        {/* Dropdown (three dots) */}
+        {/* Dropdown */}
         {!isOwnProfile && (
           <div className="ml-auto relative">
             <button
-              onClick={() => setDropdownOpen((prev) => !prev)}
+              onClick={() => setDropdownOpen(prev => !prev)}
               className="text-2xl text-accent hover:text-primary transition"
             >
               ⋮
@@ -169,28 +174,19 @@ export default function Profile() {
 
             {dropdownOpen && (
               <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 shadow-lg rounded-md z-10">
-                {profile.isBlockedByCurrentUser ? (
-                  <button
-                    onClick={handleUnblock}
-                    className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100"
-                  >
-                    Unblock User
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleBlock}
-                    className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100"
-                  >
-                    Block User
-                  </button>
-                )}
+                <button
+                  onClick={handleBlockToggle}
+                  className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100"
+                >
+                  {profile.isBlockedByCurrentUser ? "Unblock User" : "Block User"}
+                </button>
               </div>
             )}
           </div>
         )}
       </div>
 
-      {/* Bio section */}
+      {/* Bio */}
       <div className="mb-8">
         <h2 className="text-xl font-semibold text-secondary mb-2">Bio</h2>
         {bioEditing ? (
