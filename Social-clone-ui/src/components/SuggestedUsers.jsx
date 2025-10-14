@@ -56,39 +56,37 @@ export default function SuggestedUsers() {
     <div className="space-y-4">
       {users.map((user) => (
         <div
-          key={user.id}
-          className="card-social p-4 mb-3 bg-surface rounded-lg shadow hover:shadow-md transition-shadow flex items-center justify-between"
-        >
-          <div className="flex items-center gap-4">
-            <Link to={`/profile/${user.id}`}>
-              <img
-                src={user.profileImage || "/default-profile.png"}
-                alt={user.username}
-                className="w-10 h-10 rounded-full object-cover border border-accent/20"
-              />
-            </Link>
-            <div className="flex flex-col">
-              <Link
-                to={`/profile/${user.id}`}
-                className="font-medium text-secondary hover:text-primary"
-              >
-                {user.username}
-              </Link>
-              <span className="text-sm text-accent">
-                Followers: {user.followerCount || 0}
-              </span>
-            </div>
-          </div>
+  key={user.id}
+  className="card-social p-4 mb-3 bg-surface rounded-lg shadow flex items-center justify-between flex-wrap sm:flex-nowrap"
+>
+  <div className="flex items-center gap-4 flex-shrink-0">
+    <Link to={`/profile/${user.id}`}>
+      <img
+        src={user.profileImage || "/default-profile.png"}
+        alt={user.username}
+        className="w-10 h-10 rounded-full object-cover border border-accent/20"
+      />
+    </Link>
+    <div className="flex flex-col">
+      <Link
+        to={`/profile/${user.id}`}
+        className="font-medium text-secondary hover:text-primary"
+      >
+        {user.username}
+      </Link>
+      <span className="text-sm text-accent">
+        Followers: {user.followerCount || 0}
+      </span>
+    </div>
+  </div>
 
-          <button
-            onClick={() => handleFollowToggle(user.id)}
-            className={`ml-4 px-4 py-1 rounded-md text-white font-semibold whitespace-nowrap ${
-              user.isFollowing ? "bg-primary hover:bg-primary/90" : "bg-primary hover:bg-primary/90"
-            }`}
-          >
-            {user.isFollowing ? "Following" : "Follow"}
-          </button>
-        </div>
+  <button
+    onClick={() => handleFollowToggle(user.id)}
+    className="ml-4 px-4 py-1 rounded-md text-white font-semibold whitespace-nowrap flex-shrink-0 bg-primary hover:bg-primary/90"
+  >
+    {user.isFollowing ? "Following" : "Follow"}
+  </button>
+</div>
       ))}
     </div>
   );

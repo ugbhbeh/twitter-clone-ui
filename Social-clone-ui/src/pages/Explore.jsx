@@ -14,7 +14,7 @@ export default function Explore() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="flex gap-4 mb-8 justify-center">
         <button
           onClick={() => handleSectionChange("posts")}

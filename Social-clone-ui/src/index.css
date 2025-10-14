@@ -21,8 +21,10 @@
     @apply btn bg-accent text-white hover:bg-accent/90;
   }
 
-  .card-social {
-    @apply card bg-surface shadow-lg hover:shadow-xl transition-shadow;
+ .card-social {
+  @apply bg-surface rounded-lg shadow-lg hover:shadow-xl transition-shadow
+         flex items-center justify-between p-4 gap-2;
+
   }
 
   .input-social {
