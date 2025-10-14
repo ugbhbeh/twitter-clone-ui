@@ -35,11 +35,13 @@ useEffect(() => {
 
   const toggleFollow = async (userId) => {
     try {
+      console.log(userId)
       const currentlyFollowing = followingState[userId];
       if (currentlyFollowing) {
         await api.post(`/follow/unfollow/${userId}`);
       } else {
         await api.post(`/follow/${userId}`);
+               
       }
 
       setFollowingState(prev => ({

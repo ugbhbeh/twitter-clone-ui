@@ -8,14 +8,20 @@ export default function PopularUsers() {
   const [loading, setLoading] = useState(true);
   const [limit, setLimit] = useState(5);
 
+  // Fetch popular users
   const fetchUsers = async () => {
     setError("");
     setLoading(true);
     try {
-      const response = await api.get(`/users/most-followed?limit=${limit}`);
-      // Initialize isFollowing for each user
-      const usersWithFollow = response.data.map(u => ({ ...u, isFollowing: false }));
-      setUsers(usersWithFollow);
+      const currentUserId = localStorage.getItem("userId"); // optional
+      const response = await api.get("/users/most-followed", {
+        params: {
+          limit,
+          ...(currentUserId ? { userId: currentUserId } : {}),
+        },
+      });
+
+      setUsers(response.data);
     } catch (err) {
       console.error(err);
       setError("Failed to fetch users. Please try again.");
@@ -28,6 +34,7 @@ export default function PopularUsers() {
     fetchUsers();
   }, [limit]);
 
+  // Handle follow/unfollow
   const handleFollowToggle = async (targetUserId) => {
     try {
       const userIndex = users.findIndex(u => u.id === targetUserId);
@@ -41,6 +48,7 @@ export default function PopularUsers() {
         await api.post(`/users/${targetUserId}/follow`);
       }
 
+      // Update local state to reflect new follow status
       setUsers(prev =>
         prev.map((u, idx) =>
           idx === userIndex ? { ...u, isFollowing: !isFollowing } : u
@@ -53,6 +61,7 @@ export default function PopularUsers() {
 
   return (
     <div className="space-y-4">
+      {/* Header with limit selector */}
       <div className="flex justify-between items-center mb-3">
         <h2 className="font-semibold text-lg text-secondary">Popular Users</h2>
         <select
@@ -68,13 +77,15 @@ export default function PopularUsers() {
         </select>
       </div>
 
+      {/* Loading / error / empty states */}
       {loading && <div>Loading users...</div>}
       {error && <div className="text-red-500">{error}</div>}
       {!loading && !error && users.length === 0 && <p>No users found.</p>}
 
+      {/* User list */}
       {!loading &&
         !error &&
-        users.map((user) => (
+        users.map(user => (
           <div
             key={user.id}
             className="card-social p-3 mb-3 flex items-center justify-between gap-3"
@@ -96,14 +107,17 @@ export default function PopularUsers() {
                   {user.username}
                 </Link>
                 <span className="text-sm text-accent truncate">
-                  Followers: {user.followerCount ?? 0}
+                  {user.followerCount} follower{user.followerCount !== 1 ? "s" : ""}
                 </span>
               </div>
             </div>
 
             <button
               onClick={() => handleFollowToggle(user.id)}
-              className={`px-3 py-1 rounded-md text-white font-semibold whitespace-nowrap flex-shrink-0 bg-primary hover:bg-primary/90`}
+              className={`px-3 py-1 rounded-md text-white font-semibold whitespace-nowrap flex-shrink-0 ${
+                user.isFollowing ? "bg-gray-400 cursor-default" : "bg-primary hover:bg-primary/90"
+              }`}
+              disabled={user.isFollowing} // optional: disable button if already following
             >
               {user.isFollowing ? "Following" : "Follow"}
             </button>
