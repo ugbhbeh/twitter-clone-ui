@@ -8,12 +8,11 @@ export default function PopularUsers() {
   const [loading, setLoading] = useState(true);
   const [limit, setLimit] = useState(5);
 
-  // Fetch popular users
   const fetchUsers = async () => {
     setError("");
     setLoading(true);
     try {
-      const currentUserId = localStorage.getItem("userId"); // optional
+      const currentUserId = localStorage.getItem("userId");
       const response = await api.get("/users/most-followed", {
         params: {
           limit,
@@ -34,7 +33,7 @@ export default function PopularUsers() {
     fetchUsers();
   }, [limit]);
 
-  // Handle follow/unfollow
+
   const handleFollowToggle = async (targetUserId) => {
     try {
       const userIndex = users.findIndex(u => u.id === targetUserId);
@@ -48,7 +47,6 @@ export default function PopularUsers() {
         await api.post(`/users/${targetUserId}/follow`);
       }
 
-      // Update local state to reflect new follow status
       setUsers(prev =>
         prev.map((u, idx) =>
           idx === userIndex ? { ...u, isFollowing: !isFollowing } : u
@@ -115,9 +113,8 @@ export default function PopularUsers() {
             <button
               onClick={() => handleFollowToggle(user.id)}
               className={`px-3 py-1 rounded-md text-white font-semibold whitespace-nowrap flex-shrink-0 ${
-                user.isFollowing ? "bg-gray-400 cursor-default" : "bg-primary hover:bg-primary/90"
+                user.isFollowing ? 'bg-primary hover:bg-primary/90' : "bg-primary hover:bg-primary/90"
               }`}
-              disabled={user.isFollowing} // optional: disable button if already following
             >
               {user.isFollowing ? "Following" : "Follow"}
             </button>

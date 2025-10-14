@@ -50,34 +50,45 @@ useEffect(() => {
 
   return (
     <div className="space-y-4">
-      {users.map(user => (
-        <div
-          key={user.id}
-          className="flex items-center justify-between p-3 border rounded-md shadow-sm"
-        >
-          <Link to={`/profile/${user.id}`} className="flex items-center gap-3">
+  {!loading &&
+    users.map(user => (
+      <div
+        key={user.id}
+        className="card-social p-3 mb-3 flex items-center justify-between gap-3"
+      >
+        <div className="flex items-center gap-3 min-w-0 flex-1 overflow-hidden">
+          <Link to={`/profile/${user.id}`} className="flex-shrink-0">
             <img
               src={user.profileImage || "/default-avatar.png"}
-              alt={user.username}
-              className="w-10 h-10 rounded-full object-cover"
+              alt={`${user.username}'s profile`}
+              className="w-10 h-10 rounded-full object-cover border border-accent/30"
             />
-            <div>
-              <p className="font-medium">{user.username}</p>
-              <p className="text-sm text-gray-500">
-                {user.followerCount} follower{user.followerCount !== 1 ? "s" : ""}
-              </p>
-            </div>
           </Link>
-          <button
-            className={`px-4 py-1 rounded ${
-              followingState[user.id] ? "bg-blue-500 text-white" : "bg-blue-500 text-white"
-            }`}
-            onClick={() => toggleFollow(user.id)}
-          >
-            {followingState[user.id] ? "Followed" : "Follow"}
-          </button>
+
+          <div className="flex flex-col min-w-0 overflow-hidden">
+            <Link
+              to={`/profile/${user.id}`}
+              className="font-medium text-secondary hover:text-primary truncate"
+            >
+              {user.username}
+            </Link>
+            <span className="text-sm text-accent truncate">
+              {user.followerCount} follower{user.followerCount !== 1 ? "s" : ""}
+            </span>
+          </div>
         </div>
-      ))}
-    </div>
+
+        <button
+          onClick={() => toggleFollow(user.id)}
+          className={`px-3 py-1 rounded-md text-white font-semibold whitespace-nowrap flex-shrink-0 ${
+            followingState[user.id] ? "bg-primary hover:bg-primary/90" : "bg-primary hover:bg-primary/90"
+          }`}
+        >
+          {followingState[user.id] ? "Followed" : "Follow"}
+        </button>
+      </div>
+    ))}
+</div>
+
   );
 }
