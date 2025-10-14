@@ -5,20 +5,16 @@ import { Link } from "react-router-dom";
 export default function SuggestedUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [followingState, setFollowingState] = useState({}); // { userId: boolean }
+  const [followingState, setFollowingState] = useState({}); 
 
 useEffect(() => {
   const fetchUsers = async () => {
     try {
       const { data } = await api.get("/users/all-unfollowed-users");
-      console.log(data); // verify API response
-
       setUsers(data);
-
-      // Initialize followingState based on current user data
       const initialState = {};
       data.forEach(user => {
-        initialState[user.id] = false; // assume not followed initially
+        initialState[user.id] = false; 
       });
       setFollowingState(initialState);
 
@@ -32,16 +28,13 @@ useEffect(() => {
   fetchUsers();
 }, []);
 
-
   const toggleFollow = async (userId) => {
     try {
-      console.log(userId)
       const currentlyFollowing = followingState[userId];
       if (currentlyFollowing) {
-        await api.post(`/follow/unfollow/${userId}`);
+        await api.delete(`/users/${userId}/unfollow`);
       } else {
-        await api.post(`/follow/${userId}`);
-               
+        await api.post(`/users/${userId}/follow`);
       }
 
       setFollowingState(prev => ({
@@ -73,13 +66,11 @@ useEffect(() => {
               <p className="text-sm text-gray-500">
                 {user.followerCount} follower{user.followerCount !== 1 ? "s" : ""}
               </p>
-
-
             </div>
           </Link>
           <button
             className={`px-4 py-1 rounded ${
-              followingState[user.id] ? "bg-gray-300" : "bg-blue-500 text-white"
+              followingState[user.id] ? "bg-blue-500 text-white" : "bg-blue-500 text-white"
             }`}
             onClick={() => toggleFollow(user.id)}
           >
