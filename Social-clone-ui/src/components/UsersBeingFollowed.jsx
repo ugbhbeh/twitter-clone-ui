@@ -1,28 +1,28 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import api from "../services/api";
-import { data } from "autoprefixer";
 
 export default function UsersBeingFollowed() {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const { userId: targetUserId } = useParams(); // The user whose profile we’re viewing
+  const currentUserId = localStorage.getItem("userId"); // Logged-in user
+
   const fetchUsers = async () => {
     setError("");
     setLoading(true);
+
     try {
-      const currentUserId = localStorage.getItem("userId");
-      const response = await api.get("/users/:userId/following", {
-        params: {
-          ...(currentUserId ? { userId: currentUserId } : {}),
-        },
-      });
+      // Decide which profile’s following list to fetch
+      const effectiveUserId = targetUserId || currentUserId;
+
+      const response = await api.get(`/users/${effectiveUserId}/following`);
       setUsers(response.data);
-      console.log(data)
     } catch (err) {
       console.error(err);
-      setError("Failed to fetch users. Please try again.");
+      setError("Failed to fetch following users. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -30,21 +30,23 @@ export default function UsersBeingFollowed() {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
-
+  }, [targetUserId]);
 
   const handleFollowToggle = async (targetUserId) => {
     try {
-      const userIndex = users.findIndex(u => u.id === targetUserId);
+      const userIndex = users.findIndex((u) => u.id === targetUserId);
       if (userIndex === -1) return;
+
       const isFollowing = users[userIndex].isFollowing;
+
       if (isFollowing) {
-        await api.delete(`/users/${targetUserId}/unfollow`);
+        await api.post(`/follow/unfollow/${targetUserId}`);
       } else {
-        await api.post(`/users/${targetUserId}/follow`);
+        await api.post(`/follow/${targetUserId}`);
       }
 
-      setUsers(prev =>
+      // Optimistically update UI
+      setUsers((prev) =>
         prev.map((u, idx) =>
           idx === userIndex ? { ...u, isFollowing: !isFollowing } : u
         )
@@ -56,19 +58,19 @@ export default function UsersBeingFollowed() {
 
   return (
     <div className="space-y-4">
-     
       <div className="flex justify-between items-center mb-3">
         <h2 className="font-semibold text-lg text-secondary">Following</h2>
-    
       </div>
 
       {loading && <div>Loading users...</div>}
       {error && <div className="text-red-500">{error}</div>}
-      {!loading && !error && users.length === 0 && <p>No users found.</p>}
+      {!loading && !error && users.length === 0 && (
+        <p>No users found.</p>
+      )}
 
       {!loading &&
         !error &&
-        users.map(user => (
+        users.map((user) => (
           <div
             key={user.id}
             className="card-social p-3 mb-3 flex items-center justify-between gap-3"
@@ -90,19 +92,24 @@ export default function UsersBeingFollowed() {
                   {user.username}
                 </Link>
                 <span className="text-sm text-accent truncate">
-                  {user.followerCount} follower{user.followerCount !== 1 ? "s" : ""}
+                  {user.followerCount} follower
+                  {user.followerCount !== 1 ? "s" : ""}
                 </span>
               </div>
             </div>
 
-            <button
-              onClick={() => handleFollowToggle(user.id)}
-              className={`px-3 py-1 rounded-md text-white font-semibold whitespace-nowrap flex-shrink-0 ${
-                user.isFollowing ? 'bg-primary hover:bg-primary/90' : "bg-primary hover:bg-primary/90"
-              }`}
-            >
-              {user.isFollowing ? "Following" : "Follow"}
-            </button>
+            {user.id !== currentUserId && (
+              <button
+                onClick={() => handleFollowToggle(user.id)}
+                className={`px-3 py-1 rounded-md text-white font-semibold whitespace-nowrap flex-shrink-0 ${
+                  user.isFollowing
+                    ? "bg-primary/80 hover:bg-primary/90"
+                    : "bg-primary hover:bg-primary/90"
+                }`}
+              >
+                {user.isFollowing ? "Following" : "Follow"}
+              </button>
+            )}
           </div>
         ))}
     </div>
