@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import PostCard from "../components/PostCard";
+import UsersBeingFollowed from "../components/UsersBeingFollowed";
 
 export default function Profile() {
   const { userId } = useParams();
@@ -115,7 +116,9 @@ export default function Profile() {
   const isOwnProfile = profile.id === localStorage.getItem("userId");
 
   return (
+   
     <div className="max-w-3xl mx-auto px-4 py-8 relative">
+       <UsersBeingFollowed/>
       {/* Header */}
       <div className="flex flex-col md:flex-row items-center gap-6 mb-8 relative">
         <img

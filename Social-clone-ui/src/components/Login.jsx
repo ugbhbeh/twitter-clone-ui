@@ -41,7 +41,7 @@ function Login() {
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center bg-background">
-      <div className="card-social w-full max-w-md p-8">
+      <div className="card-social-auth w-full max-w-md p-8">
         <form onSubmit={handleSubmit} className="space-y-6">
           <h2 className="text-2xl font-bold text-center text-secondary mb-4">Welcome Back</h2>
 

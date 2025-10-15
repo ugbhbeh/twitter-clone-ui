@@ -78,7 +78,7 @@ function Signup() {
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center bg-background">
-      <div className="card-social w-full max-w-md p-8">
+      <div className="card-social-auth w-full max-w-md p-8">
         <form onSubmit={handleSubmit} className="space-y-6">
           <h2 className="text-2xl font-bold text-center text-secondary mb-8">Sign Up</h2>
           {error && <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-4">{error}</div>}

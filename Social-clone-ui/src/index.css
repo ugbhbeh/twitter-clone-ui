@@ -24,6 +24,11 @@
  .card-social {
   @apply bg-surface rounded-lg shadow-lg hover:shadow-xl transition-shadow
          flex items-center justify-between p-4 gap-2;
+ }
+         
+ .card-social-auth {
+  @apply bg-surface rounded-lg shadow-lg hover:shadow-xl transition-shadow
+         
 
   }
 
