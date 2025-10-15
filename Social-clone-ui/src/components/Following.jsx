@@ -2,22 +2,20 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import api from "../services/api";
 
-export default function UsersBeingFollowed() {
+export default function Following() {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const { userId: targetUserId } = useParams(); // The user whose profile we’re viewing
-  const currentUserId = localStorage.getItem("userId"); // Logged-in user
+  const { userId: targetUserId } = useParams(); 
+  const currentUserId = localStorage.getItem("userId"); 
 
   const fetchUsers = async () => {
     setError("");
     setLoading(true);
 
     try {
-      // Decide which profile’s following list to fetch
       const effectiveUserId = targetUserId || currentUserId;
-
       const response = await api.get(`/users/${effectiveUserId}/following`);
       setUsers(response.data);
     } catch (err) {
@@ -45,7 +43,6 @@ export default function UsersBeingFollowed() {
         await api.post(`/follow/${targetUserId}`);
       }
 
-      // Optimistically update UI
       setUsers((prev) =>
         prev.map((u, idx) =>
           idx === userIndex ? { ...u, isFollowing: !isFollowing } : u
