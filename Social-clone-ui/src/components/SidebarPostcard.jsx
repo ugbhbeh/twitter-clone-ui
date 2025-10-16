@@ -5,7 +5,7 @@ export default function SidebarPostCard({ post }) {
     post.content.length > 100 ? post.content.slice(0, 100) + "..." : post.content;
 
   return (
-    <div className="card-social p-4 mb-3 bg-surface rounded-lg shadow hover:shadow-md transition-shadow">
+    <div className="card-social-auth p-4 mb-3 bg-surface rounded-lg shadow hover:shadow-md transition-shadow">
       <div className="flex items-center space-x-2 mb-2 text-sm text-accent">
         <img
           src={post.author?.profileImage || "/default-profile.png"}
