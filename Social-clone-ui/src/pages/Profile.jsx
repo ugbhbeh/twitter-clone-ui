@@ -1,9 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../services/api";
-import PostCard from "../components/PostCard";
-import Following from "../components/Following";
-import Followers from "../components/Followers";
+import ProfileTabs from "../components/ProfileTabsHandler";
 
 export default function Profile() {
   const { userId } = useParams();
@@ -26,8 +24,8 @@ export default function Profile() {
       setBioInput(res.data.bio || "");
       setError(null);
     } catch (err) {
-      setError("Failed to load profile");
       console.error(err);
+      setError("Failed to load profile");
     } finally {
       setLoading(false);
     }
@@ -61,9 +59,9 @@ export default function Profile() {
       }
 
       if (res.data.success) {
-        setProfile(prev => ({
+        setProfile((prev) => ({
           ...prev,
-          isBlockedByCurrentUser: !prev.isBlockedByCurrentUser
+          isBlockedByCurrentUser: !prev.isBlockedByCurrentUser,
         }));
         setDropdownOpen(false);
       } else {
@@ -85,24 +83,6 @@ export default function Profile() {
     }
   }
 
-  const handleLike = async (postId) => {
-    try {
-      await api.post(`/posts/${postId}/like`);
-      await fetchProfile();
-    } catch (err) {
-      console.error("Failed to like post", err);
-    }
-  };
-
-  const handleDislike = async (postId) => {
-    try {
-      await api.post(`/posts/${postId}/dislike`);
-      await fetchProfile();
-    } catch (err) {
-      console.error("Failed to dislike post", err);
-    }
-  };
-
   if (loading)
     return (
       <div className="flex justify-center items-center min-h-[40vh] text-accent">
@@ -117,11 +97,8 @@ export default function Profile() {
   const isOwnProfile = profile.id === localStorage.getItem("userId");
 
   return (
-   
     <div className="max-w-3xl mx-auto px-4 py-8 relative">
-       <Followers/>
-       <Following/>
-      {/* Header */}
+      {/* --- Profile Header --- */}
       <div className="flex flex-col md:flex-row items-center gap-6 mb-8 relative">
         <img
           src={profile.profileImage || "/default-profile.png"}
@@ -171,7 +148,7 @@ export default function Profile() {
         {!isOwnProfile && (
           <div className="ml-auto relative">
             <button
-              onClick={() => setDropdownOpen(prev => !prev)}
+              onClick={() => setDropdownOpen((prev) => !prev)}
               className="text-2xl text-accent hover:text-primary transition"
             >
               ⋮
@@ -191,7 +168,7 @@ export default function Profile() {
         )}
       </div>
 
-      {/* Bio */}
+      {/* --- Bio Section --- */}
       <div className="mb-8">
         <h2 className="text-xl font-semibold text-secondary mb-2">Bio</h2>
         {bioEditing ? (
@@ -199,7 +176,7 @@ export default function Profile() {
             <textarea
               value={bioInput}
               onChange={(e) => setBioInput(e.target.value)}
-              className="input-social bg-surface text-secondary border border-accent/30 focus:border-primary placeholder:text-accent min-h-[60px] resize-none w-full"
+              className="input-social bg-surface text-secondary border border-accent/30 focus:border-primary min-h-[60px] resize-none w-full"
             />
             <div className="flex gap-2">
               <button onClick={handleBioUpdate} className="btn btn-primary btn-sm">
@@ -229,18 +206,9 @@ export default function Profile() {
       </div>
 
       <hr className="my-8 border-accent/20" />
-      <h2 className="text-xl font-semibold text-primary mb-4">Posts</h2>
 
-      <div className="space-y-6">
-        {profile.posts.map((post) => (
-          <PostCard
-            key={post.id}
-            post={post}
-            onLike={handleLike}
-            onDislike={handleDislike}
-          />
-        ))}
-      </div>
+      {/* --- Tabs Section --- */}
+      <ProfileTabs userId={userId} />
     </div>
   );
 }
