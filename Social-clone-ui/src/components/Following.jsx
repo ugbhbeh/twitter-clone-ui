@@ -38,9 +38,9 @@ export default function Following() {
       const isFollowing = users[userIndex].isFollowing;
 
       if (isFollowing) {
-        await api.post(`/follow/unfollow/${targetUserId}`);
+        await api.post(`/${targetUserId}/unfollow`);
       } else {
-        await api.post(`/follow/${targetUserId}`);
+        await api.post(`/${targetUserId}follow/`);
       }
 
       setUsers((prev) =>
@@ -49,7 +49,7 @@ export default function Following() {
         )
       );
     } catch (err) {
-      console.error("Follow/unfollow failed", err.response?.data || err);
+      console.log(err)
     }
   };
 

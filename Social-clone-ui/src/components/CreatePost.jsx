@@ -27,7 +27,7 @@ export default  function CreatePost() {
    };
 
    return (
-    <div className="card-social p-6">
+    <div className="card-social-auth p-6">
         <h2 className="text-xl font-semibold text-secondary mb-4">Create new post</h2>
         {error && (
           <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-4">
