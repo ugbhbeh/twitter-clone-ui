@@ -40,9 +40,9 @@ export default function Followers() {
       const isFollowing = users[userIndex].isFollowing;
 
       if (isFollowing) {
-        await api.post(`/follow/unfollow/${targetUserId}`);
+        await api.delete(`/users/${targetUserId}/unfollow`);
       } else {
-        await api.post(`/follow/${targetUserId}`);
+        await api.post(`/users/${targetUserId}/follow`);
       }
 
       setUsers((prev) =>

@@ -98,7 +98,7 @@ export default function Profile() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 relative">
-      {/* --- Profile Header --- */}
+   
       <div className="flex flex-col md:flex-row items-center gap-6 mb-8 relative">
         <img
           src={profile.profileImage || "/default-profile.png"}
@@ -144,7 +144,7 @@ export default function Profile() {
           )}
         </div>
 
-        {/* Dropdown */}
+    
         {!isOwnProfile && (
           <div className="ml-auto relative">
             <button
@@ -208,7 +208,7 @@ export default function Profile() {
       <hr className="my-8 border-accent/20" />
 
       {/* --- Tabs Section --- */}
-      <ProfileTabs userId={userId} />
+      <ProfileTabs userId={userId}  posts={profile.posts} />
     </div>
   );
 }

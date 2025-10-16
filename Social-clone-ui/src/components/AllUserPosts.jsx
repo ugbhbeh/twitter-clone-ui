@@ -1,30 +1,19 @@
-import { useEffect, useState } from "react";
-import api from "../services/api";
 import PostCard from "./PostCard";
 
-export default function UserPosts({ userId }) {
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    fetchPosts();
-  }, [userId]);
-
-  async function fetchPosts() {
-    try {
-      const res = await api.get(`/users/${userId}/posts`);
-      setPosts(res.data);
-    } catch (err) {
-      console.error("Failed to fetch user posts", err);
-    }
+export default function UserPosts({ posts, onLike, onDislike }) {
+  if (!posts || posts.length === 0) {
+    return <div className="text-accent text-center py-4">No posts yet</div>;
   }
-
-  if (!posts.length)
-    return <p className="text-accent text-center">No posts yet.</p>;
 
   return (
     <div className="space-y-6">
       {posts.map((post) => (
-        <PostCard key={post.id} post={post} />
+        <PostCard
+          key={post.id}
+          post={post}
+          onLike={onLike}
+          onDislike={onDislike}
+        />
       ))}
     </div>
   );
