@@ -3,7 +3,7 @@ import UserPosts from "./AllUserPosts";
 import Followers from "./Followers";
 import Following from "./Following";
 
-export default function ProfileTabs({ userId, posts={posts} }) {
+export default function ProfileTabs({ userId}) {
   const [activeTab, setActiveTab] = useState("posts");
 
   const tabs = [
@@ -31,7 +31,7 @@ export default function ProfileTabs({ userId, posts={posts} }) {
       </div>
 
       <div className="mt-6">
-        {activeTab === "posts" && <UserPosts userId={userId} posts={posts}  />}
+        {activeTab === "posts" && <UserPosts userId={userId}/>}
         {activeTab === "followers" && <Followers userId={userId} />}
         {activeTab === "following" && <Following userId={userId} />}
       </div>

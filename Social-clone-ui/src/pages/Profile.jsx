@@ -83,6 +83,7 @@ export default function Profile() {
     }
   }
 
+  
   if (loading)
     return (
       <div className="flex justify-center items-center min-h-[40vh] text-accent">
@@ -208,7 +209,7 @@ export default function Profile() {
       <hr className="my-8 border-accent/20" />
 
       {/* --- Tabs Section --- */}
-      <ProfileTabs userId={userId}  posts={profile.posts} />
+      <ProfileTabs userId={userId}/>
     </div>
   );
 }
