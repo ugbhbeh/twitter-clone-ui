@@ -40,7 +40,6 @@ export default function PostFeed() {
     try {
       await api.post(`/posts/${postId}/like`);
       fetchPosts();
-      
     } catch (err) {
       console.error("Failed to like post", err)
     }
