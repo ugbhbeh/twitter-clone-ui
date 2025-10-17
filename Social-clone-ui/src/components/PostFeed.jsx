@@ -50,7 +50,7 @@ const handleLike = async (postId) => {
     return {
       ...p,
       likedByUser: !alreadyLiked,
-      dislikedByUser: false, // remove dislike if any
+      dislikedByUser: false, 
       _count: {
         ...p._count,
         likes: alreadyLiked ? Math.max((p._count?.likes ?? 1) - 1, 0) : (p._count?.likes ?? 0) + 1,
@@ -62,7 +62,6 @@ const handleLike = async (postId) => {
   try {
     await api.post(`/posts/${postId}/like`);
   } catch {
-    // rollback
     updatePostState(postId, (p) => ({
       ...p,
       likedByUser: p.likedByUser ? false : true,
@@ -86,7 +85,7 @@ const handleDislike = async (postId) => {
     return {
       ...p,
       dislikedByUser: !alreadyDisliked,
-      likedByUser: false, // remove like if any
+      likedByUser: false, 
       _count: {
         ...p._count,
         dislikes: alreadyDisliked ? Math.max((p._count?.dislikes ?? 1) - 1, 0) : (p._count?.dislikes ?? 0) + 1,
@@ -98,7 +97,6 @@ const handleDislike = async (postId) => {
   try {
     await api.post(`/posts/${postId}/dislike`);
   } catch {
-    // rollback
     updatePostState(postId, (p) => ({
       ...p,
       dislikedByUser: p.dislikedByUser ? false : true,
@@ -113,7 +111,6 @@ const handleDislike = async (postId) => {
     }));
   }
 };
-
 
   if (loading) return <div>Loading posts...</div>;
 
