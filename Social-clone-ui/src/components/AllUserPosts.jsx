@@ -10,7 +10,6 @@ export default function UserPosts({ userId }) {
     try {
       setLoading(true);
       const res = await api.get(`/users/${userId}/posts`);
-      // Initialize likedByUser / dislikedByUser if missing
       setPosts(res.data.map(p => ({
         ...p,
         likedByUser: p.likedByUser ?? false,
