@@ -12,6 +12,7 @@ export default function Profile() {
   const [error, setError] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+
   useEffect(() => {
     fetchProfile();
   }, [userId]);
@@ -31,23 +32,32 @@ export default function Profile() {
     }
   }
 
-  async function handleFollow() {
-    try {
-      await api.post(`/users/${userId}/follow`);
-      await fetchProfile();
-    } catch {
-      alert("Follow failed");
-    }
-  }
+const handleFollowToggle = async () => {
+  if (!profile) return;
 
-  async function handleUnFollow() {
-    try {
-      await api.delete(`/users/${userId}/unfollow`);
-      await fetchProfile();
-    } catch {
-      alert("Unfollow failed");
+  const wasFollowing = profile.isFollowing;
+
+  setProfile(prev => ({
+    ...prev,
+    isFollowing: !wasFollowing,
+    followerCount: prev.followerCount + (wasFollowing ? -1 : 1),
+  }));
+
+  try {
+    if (wasFollowing) {
+      await api.delete(`/users/${profile.id}/unfollow`);
+    } else {
+      await api.post(`/users/${profile.id}/follow`);
     }
+  } catch (err) {
+    setProfile(prev => ({
+      ...prev,
+      isFollowing: wasFollowing,
+      followerCount: prev.followerCount + (wasFollowing ? 1 : -1),
+    }));
+    console.error("Follow/unfollow failed", err.response?.data || err);
   }
+};
 
   async function handleBlockToggle() {
     try {
@@ -125,27 +135,24 @@ export default function Profile() {
             </span>
           </div>
           {!isOwnProfile && (
-            <>
-              {profile.isFollowing ? (
-                <button
-                  onClick={handleUnFollow}
-                  className="btn btn-outline btn-secondary font-semibold px-6 py-2 mt-2"
-                >
-                  Unfollow
-                </button>
-              ) : (
-                <button
-                  onClick={handleFollow}
-                  className="btn btn-primary font-semibold px-6 py-2 mt-2"
-                >
-                  Follow
-                </button>
-              )}
-            </>
-          )}
+          <>
+            {profile.isFollowing ? (
+              <button
+                onClick={handleFollowToggle}
+                className="btn btn-outline btn-secondary font-semibold px-6 py-2 mt-2"
+              >
+                Unfollow
+              </button>
+            ) : (
+              <button
+                onClick={handleFollowToggle}
+                className="btn btn-primary font-semibold px-6 py-2 mt-2"
+              >
+                Follow
+              </button>
+            )}
+          </> )}  
         </div>
-
-    
         {!isOwnProfile && (
           <div className="ml-auto relative">
             <button
