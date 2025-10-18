@@ -10,6 +10,7 @@ export default function PostFeed() {
   const [generalPosts, setGeneralPosts] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [followingState, setFollowingState] = useState({});
 
   const fetchPosts = async () => {
     setError('');
@@ -40,6 +41,31 @@ const updatePostState = (postId, updateFn) => {
   setFollowedPosts(prev => apply(prev));
   setGeneralPosts(prev => apply(prev));
   setPosts(prev => apply(prev));
+};
+
+const toggleFollow = async (userId) => {
+  const currentlyFollowing = followingState[userId] ?? false;
+
+ 
+  setFollowingState(prev => ({
+    ...prev,
+    [userId]: !currentlyFollowing
+  }));
+
+  try {
+    if (currentlyFollowing) {
+      await api.delete(`/users/${userId}/unfollow`);
+    } else {
+      await api.post(`/users/${userId}/follow`);
+    }
+  } catch (err) {
+    console.error("Follow/unfollow failed:", err);
+
+    setFollowingState(prev => ({
+      ...prev,
+      [userId]: currentlyFollowing
+    }));
+  }
 };
 
 const handleLike = async (postId) => {
@@ -128,6 +154,8 @@ const handleDislike = async (postId) => {
                 post={post}
                 onLike={handleLike}
                 onDislike={handleDislike}
+                onFollowToggle={toggleFollow}
+                isFollowing={followingState[post.author?.id] ?? post.author?.isFollowing}
               />
             ))}
             <hr/>
