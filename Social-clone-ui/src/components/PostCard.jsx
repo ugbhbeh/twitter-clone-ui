@@ -6,7 +6,9 @@ export default function PostCard({ post, onLike, onDislike, onFollowToggle, isFo
 
   return (
     <article className="card-social p-6 mb-4">
-      <div className="flex items-center space-x-3 mb-4">
+
+      <div className="flex items-center space-x-3 mb-3">
+        
         <Link to={`/profile/${post.author?.id}`}>
           <img
             src={post.author?.profileImage || "/images/default-avatar.png"}
@@ -14,24 +16,19 @@ export default function PostCard({ post, onLike, onDislike, onFollowToggle, isFo
             className="h-10 w-10 rounded-full object-cover border border-accent/20"
           />
         </Link>
-
-        <div className="flex items-center justify-between flex-1">
+        
+        <div className="flex items-center justify-between flex-1 ">
           <div>
+            <div className="space-x-3">
             <Link
               to={`/profile/${post.author?.id}`}
-              className="font-medium text-secondary hover:text-primary"
+              className="font-medium text-secondary hover:text-primary bg-origin-padding"
             >
               {post.author?.username || "Unknown"}
             </Link>
-            <p className="text-sm text-accent">
-              {new Date(post.createdAt).toLocaleString()}
-            </p>
-          </div>
-
-         
-          <button
+            <button
             onClick={() => onFollowToggle?.(post.author?.id)}
-            className={`text-sm px-3 py-1 rounded-md font-medium transition-colors ${
+            className={`text-sm px-5 py-1 rounded-md font-medium transition-colors ${
               isFollowing
                 ? "bg-gray-200 text-secondary hover:bg-gray-300"
                 : "bg-primary text-white hover:bg-primary/90"
@@ -39,6 +36,17 @@ export default function PostCard({ post, onLike, onDislike, onFollowToggle, isFo
           >
             {isFollowing ? "Unfollow" : "Follow"}
           </button>
+          </div>
+            <p className="text-sm text-accent">
+              {new Date(post.createdAt).toLocaleString()}
+            </p>
+          
+          
+        
+          </div>
+
+         
+          
         </div>
       </div>
 
