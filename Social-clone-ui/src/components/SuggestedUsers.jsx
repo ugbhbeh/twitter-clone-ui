@@ -28,23 +28,27 @@ useEffect(() => {
   fetchUsers();
 }, []);
 
-  const toggleFollow = async (userId) => {
-    try {
-      const currentlyFollowing = followingState[userId];
-      if (currentlyFollowing) {
-        await api.delete(`/users/${userId}/unfollow`);
-      } else {
-        await api.post(`/users/${userId}/follow`);
-      }
+const toggleFollow = async (userId) => {
+  const currentlyFollowing = followingState[userId] ?? false;
+  setFollowingState(prev => ({
+    ...prev,
+    [userId]: !currentlyFollowing
+  }));
 
-      setFollowingState(prev => ({
-        ...prev,
-        [userId]: !currentlyFollowing
-      }));
-    } catch (err) {
-      console.error("Follow/unfollow failed:", err);
+  try {
+    if (currentlyFollowing) {
+      await api.delete(`/users/${userId}/unfollow`);
+    } else {
+      await api.post(`/users/${userId}/follow`);
     }
-  };
+  } catch (err) {
+    console.error("Follow/unfollow failed:", err);
+    setFollowingState(prev => ({
+      ...prev,
+      [userId]: currentlyFollowing
+    }));
+  }
+};
 
   if (loading) return <p>Loading suggested users...</p>;
 

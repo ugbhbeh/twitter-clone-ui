@@ -59,7 +59,6 @@ export default function PopularUsers() {
 
   return (
     <div className="space-y-4">
-      {/* Header with limit selector */}
       <div className="flex justify-between items-center mb-3">
         <h2 className="font-semibold text-lg text-secondary">Popular Users</h2>
         <select
@@ -75,12 +74,12 @@ export default function PopularUsers() {
         </select>
       </div>
 
-      {/* Loading / error / empty states */}
+      
       {loading && <div>Loading users...</div>}
       {error && <div className="text-red-500">{error}</div>}
       {!loading && !error && users.length === 0 && <p>No users found.</p>}
 
-      {/* User list */}
+    
       {!loading &&
         !error &&
         users.map(user => (
