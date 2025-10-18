@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import PostCard from "./PostCard";
+import PostCard2 from "./PostCard2";
 import api from "../services/api";
 
 export default function UserPosts({ userId }) {
@@ -104,7 +104,7 @@ export default function UserPosts({ userId }) {
   return (
     <div className="space-y-6">
       {posts.map((post) => (
-        <PostCard
+        <PostCard2
           key={post.id}
           post={post}
           onLike={() => handleLike(post.id)}
