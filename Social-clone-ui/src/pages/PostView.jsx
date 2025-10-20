@@ -8,14 +8,12 @@ export default function PostView() {
   const { Id } = useParams();
   const navigate = useNavigate();
 
-
   const [post, setPost] = useState(null);
   const [postContent, setPostContent] = useState("");
   const [editingPost, setEditingPost] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [editingComment, setEditingComment] = useState(null);
   const [error, setError] = useState("");
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   /** Fetch post with comments */
   const fetchPost = useCallback(async () => {
@@ -74,6 +72,34 @@ export default function PostView() {
     } catch (err) {
       console.error(err);
       setError(err.response?.data?.error || "Error disliking post");
+    }
+  };
+
+  /** Toggle follow for post author */
+  const toggleFollow = async () => {
+    if (!post || !post.author) return;
+    const authorId = post.author.id;
+    const currentlyFollowing = post.author.isFollowing;
+
+    // Optimistically update
+    setPost((prev) => ({
+      ...prev,
+      author: { ...prev.author, isFollowing: !currentlyFollowing },
+    }));
+
+    try {
+      if (currentlyFollowing) {
+        await api.delete(`/users/${authorId}/unfollow`);
+      } else {
+        await api.post(`/users/${authorId}/follow`);
+      }
+    } catch (err) {
+      console.error("Follow/unfollow failed", err);
+      // revert on error
+      setPost((prev) => ({
+        ...prev,
+        author: { ...prev.author, isFollowing: currentlyFollowing },
+      }));
     }
   };
 
@@ -142,14 +168,16 @@ export default function PostView() {
       {/* Post */}
       <PostCard
         post={post}
-        isEditing={editingPost}
         postContent={postContent}
         setPostContent={setPostContent}
+        isEditing={editingPost}
         onEdit={handleSavePost}
         onDelete={handleDeletePost}
         onLike={handlePostLike}
         onDislike={handlePostDislike}
         onCancelEdit={() => setEditingPost(false)}
+        toggleFollow={toggleFollow}
+        isFollowing={post.author?.isFollowing}
       />
 
       {/* New Comment Form */}
@@ -163,7 +191,10 @@ export default function PostView() {
           required
         />
         <div className="flex justify-end">
-          <button type="submit" className="bg-primary text-white px-4 py-1 rounded-md hover:bg-primary/90">
+          <button
+            type="submit"
+            className="bg-primary text-white px-4 py-1 rounded-md hover:bg-primary/90"
+          >
             Add Comment
           </button>
         </div>
@@ -189,29 +220,6 @@ export default function PostView() {
           ))
         )}
       </section>
-
-      {/* Delete Post Modal */}
-      {showDeleteModal && (
-        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-          <div className="bg-surface p-6 rounded-lg shadow-md w-80 text-center space-y-4">
-            <p className="text-secondary">Are you sure you want to delete this post?</p>
-            <div className="flex justify-center gap-4">
-              <button
-                className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600"
-                onClick={handleDeletePost}
-              >
-                Yes, Delete
-              </button>
-              <button
-                className="bg-accent/20 text-secondary px-4 py-1 rounded-md hover:bg-accent/30"
-                onClick={() => setShowDeleteModal(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
