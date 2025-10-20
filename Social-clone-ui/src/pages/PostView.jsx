@@ -103,6 +103,45 @@ export default function PostView() {
     }
   };
 
+  
+  /** Toggle follow for comment authors */
+  const handleToggleFollow = async (authorId) => {
+    if (!post) return;
+    const commentIndex = post.comments.findIndex(c => c.author?.id === authorId);
+    if (commentIndex === -1) return;
+
+    const currentlyFollowing = post.comments[commentIndex].isFollowing;
+
+    // Optimistic update
+    setPost(prev => ({
+      ...prev,
+      comments: prev.comments.map(c =>
+        c.author?.id === authorId
+          ? { ...c, isFollowing: !currentlyFollowing }
+          : c
+      ),
+    }));
+
+    try {
+      if (currentlyFollowing) {
+        await api.delete(`/users/${authorId}/unfollow`);
+      } else {
+        await api.post(`/users/${authorId}/follow`);
+      }
+    } catch (err) {
+      console.error("Follow/unfollow failed", err.response?.data || err);
+      // Revert on error
+      setPost(prev => ({
+        ...prev,
+        comments: prev.comments.map(c =>
+          c.author?.id === authorId
+            ? { ...c, isFollowing: currentlyFollowing }
+            : c
+        ),
+      }));
+    }
+  };
+
   /** Comment actions */
   const handleAddComment = async (e) => {
     e.preventDefault();
@@ -178,6 +217,8 @@ export default function PostView() {
         onCancelEdit={() => setEditingPost(false)}
         toggleFollow={toggleFollow}
         isFollowing={post.author?.isFollowing}
+        toggleCFollow={handleToggleFollow}         
+        isCFollowing={post.isFollowing} 
       />
 
       {/* New Comment Form */}
@@ -216,6 +257,8 @@ export default function PostView() {
               onDelete={() => handleDeleteComment(comment.id)}
               onLike={handleLikeComment}
               onDislike={handleDislikeComment}
+              toggleFollow={handleToggleFollow}              
+              isFollowing={comment.isFollowing || false}            
             />
           ))
         )}
