@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function PostCard({ post, onLike, onDislike, onFollowToggle, isFollowing }) {
+export default function PostCard({ post, onLike, onDislike, toggleFollow, isFollowing }) {
   const likeCount = post._count?.likes ?? 0;
   const dislikeCount = post._count?.dislikes ?? 0;
 
@@ -27,7 +27,9 @@ export default function PostCard({ post, onLike, onDislike, onFollowToggle, isFo
               {post.author?.username || "Unknown"}
             </Link>
             <button
-            onClick={() => onFollowToggle?.(post.author?.id)}
+             
+           onClick={() => toggleFollow(post.author.id)}
+
             className={`text-sm px-5 py-1 rounded-md font-medium transition-colors ${
               isFollowing
                 ? "bg-gray-200 text-secondary hover:bg-gray-300"
@@ -39,14 +41,8 @@ export default function PostCard({ post, onLike, onDislike, onFollowToggle, isFo
           </div>
             <p className="text-sm text-accent">
               {new Date(post.createdAt).toLocaleString()}
-            </p>
-          
-          
-        
+            </p> 
           </div>
-
-         
-          
         </div>
       </div>
 
