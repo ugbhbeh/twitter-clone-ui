@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import AuthContext from "../services/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
-import ThemeToggle from "./ThemeToggle";
 
 export default function TopBar() {
   const { isLoggedIn, logout } = useContext(AuthContext);
@@ -63,11 +62,8 @@ export default function TopBar() {
             </button>
           </div>
 
-          {/* Right section */}
+  
           <div className="flex items-center space-x-3">
-            {/* Theme toggle positioned just before profile/login */}
-            <ThemeToggle />
-
             {isLoggedIn ? (
               <>
                 {userId && (
