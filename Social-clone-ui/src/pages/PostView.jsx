@@ -15,7 +15,6 @@ export default function PostView() {
   const [editingComment, setEditingComment] = useState(null);
   const [error, setError] = useState("");
 
-  /** Fetch post with comments */
   const fetchPost = useCallback(async () => {
     try {
       const res = await api.get(`/posts/${Id}`);
@@ -32,7 +31,6 @@ export default function PostView() {
     fetchPost();
   }, [fetchPost]);
 
-  /** Post actions */
   const handleSavePost = async () => {
     if (!postContent.trim()) return;
     try {
@@ -75,13 +73,13 @@ export default function PostView() {
     }
   };
 
-  /** Toggle follow for post author */
+  
   const toggleFollow = async () => {
     if (!post || !post.author) return;
     const authorId = post.author.id;
     const currentlyFollowing = post.author.isFollowing;
 
-    // Optimistically update
+   
     setPost((prev) => ({
       ...prev,
       author: { ...prev.author, isFollowing: !currentlyFollowing },
@@ -95,7 +93,6 @@ export default function PostView() {
       }
     } catch (err) {
       console.error("Follow/unfollow failed", err);
-      // revert on error
       setPost((prev) => ({
         ...prev,
         author: { ...prev.author, isFollowing: currentlyFollowing },
@@ -104,15 +101,12 @@ export default function PostView() {
   };
 
   
-  /** Toggle follow for comment authors */
   const handleToggleFollow = async (authorId) => {
     if (!post) return;
     const commentIndex = post.comments.findIndex(c => c.author?.id === authorId);
     if (commentIndex === -1) return;
 
     const currentlyFollowing = post.comments[commentIndex].isFollowing;
-
-    // Optimistic update
     setPost(prev => ({
       ...prev,
       comments: prev.comments.map(c =>
@@ -130,7 +124,6 @@ export default function PostView() {
       }
     } catch (err) {
       console.error("Follow/unfollow failed", err.response?.data || err);
-      // Revert on error
       setPost(prev => ({
         ...prev,
         comments: prev.comments.map(c =>
@@ -142,7 +135,6 @@ export default function PostView() {
     }
   };
 
-  /** Comment actions */
   const handleAddComment = async (e) => {
     e.preventDefault();
     if (!newComment.trim()) return;

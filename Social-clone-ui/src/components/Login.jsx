@@ -32,8 +32,7 @@ function Login() {
       console.error(err);
     }
   };
-
-  // Input classes with conditional error styling
+  
   const inputClass = (field) =>
     `input-social bg-surface text-secondary border ${
       error && (!field || field === "email") ? "border-red-500" : "border-accent/30"

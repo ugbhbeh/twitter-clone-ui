@@ -53,7 +53,6 @@ export default function MostPopularPosts() {
     try {
       await api.post(`/posts/${postId}/like`);
     } catch {
-      // rollback
       updatePostState(postId, (p) => ({
         ...p,
         likedByUser: p.likedByUser ? false : true,

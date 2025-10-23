@@ -11,8 +11,8 @@ export default function CommentCard({
   onDelete,
   onLike,
   onDislike,
-  toggleFollow,       // NEW: function to toggle follow
-  isFollowing,        // NEW: boolean to indicate follow status
+  toggleFollow,       
+  isFollowing,        
 }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [editContent, setEditContent] = useState(comment.content);

@@ -97,7 +97,6 @@ export default function PostFeed() {
     try {
       await api.post(`/posts/${postId}/like`);
     } catch {
-      // revert on failure
       updatePostState(postId, p => ({ ...p, likedByUser: !p.likedByUser }));
     }
   };

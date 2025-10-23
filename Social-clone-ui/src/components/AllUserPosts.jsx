@@ -50,7 +50,7 @@ export default function UserPosts({ userId }) {
     try {
       await api.post(`/posts/${postId}/like`);
     } catch {
-      // rollback
+      
       updatePostState(postId, (p) => ({
         ...p,
         likedByUser: p.likedByUser ? false : true,
@@ -84,7 +84,7 @@ export default function UserPosts({ userId }) {
     try {
       await api.post(`/posts/${postId}/dislike`);
     } catch {
-      // rollback
+
       updatePostState(postId, (p) => ({
         ...p,
         dislikedByUser: p.dislikedByUser ? false : true,
