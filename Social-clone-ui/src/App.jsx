@@ -8,7 +8,9 @@ import AuthProvider  from './services/AuthProvider'
 import TopBar from './components/TopBar'
 import Explore from"./pages/Explore"
 import { useState, useEffect } from 'react';
+import DMPage from './pages/Dm';
 import './App.css'
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
@@ -34,6 +36,7 @@ function App() {
               <Route path="/posts/:Id" element={<PostView />} />
               <Route path="/explore" element={<Explore/>} />
               <Route path="/profile/:userId" element={<Profile />} />
+              <Route path="/dm" element={<DMPage/>} />
             </Routes>
           </main>
         </div>
