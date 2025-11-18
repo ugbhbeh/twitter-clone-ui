@@ -64,6 +64,26 @@ export default function TopBar() {
 
   
           <div className="flex items-center space-x-3">
+                      <button
+                onClick={() => navigate("/dm")}
+                className="p-2 rounded-full hover:bg-gray-100 transition"
+                title="Messages"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-6 h-6 text-gray-700"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3 12l18-9-4 18-5-8-5 8z"
+                  />
+                </svg>
+              </button>
             {isLoggedIn ? (
               <>
                 {userId && (
@@ -86,6 +106,7 @@ export default function TopBar() {
                     Profile
                   </Link>
                 )}
+                
                 <button onClick={handleLogout} className="btn btn-secondary">
                   Logout
                 </button>
