@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
-import Sidebar from "../components/Sidebar";
-import ChatWindow from "../components/ChatWindow";
+import Sidebar from "../components/ChatSideBar";
+import Chat from "../components/ChatBox";
 import AuthContext from "../services/AuthContext";
 
 export default function DMPage() {
@@ -18,14 +18,12 @@ export default function DMPage() {
     <div className="flex h-screen w-full">
       <Sidebar
         onSelectUser={handleSelect}
-        currentUserId={user.id}
         isOpen={true}
       />
       
       <div className="flex-1">
         {active ? (
-          <ChatWindow
-            groupId={active.groupId}
+          <Chat
             userData={active.selectedUser}
             initialMessages={active.messages}
           />

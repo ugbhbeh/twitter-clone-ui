@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import api from "../services/api";
-import socket from "../services/socket";
+import io from "socket.io-client";
 
-export default function ChatComponent({ selectedChatId, currentUserId }) {
+export default function Chat({ selectedChatId, currentUserId }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
 
@@ -16,13 +16,13 @@ export default function ChatComponent({ selectedChatId, currentUserId }) {
   }, [selectedChatId]);
 
   useEffect(() => {
-    socket.on("newMessage", (msg) => {
+    io.on("newMessage", (msg) => {
       if (msg.chatId === selectedChatId) {
         setMessages((prev) => [...prev, msg]);
       }
     });
 
-    return () => socket.off("newMessage");
+    return () => io.off("newMessage");
   }, [selectedChatId]);
 
   const sendMessage = async () => {
@@ -33,7 +33,7 @@ export default function ChatComponent({ selectedChatId, currentUserId }) {
         text: input,
       });
 
-      socket.emit("sendMessage", {
+      io.emit("sendMessage", {
         chatId: selectedChatId,
         message: res.data,
       });
