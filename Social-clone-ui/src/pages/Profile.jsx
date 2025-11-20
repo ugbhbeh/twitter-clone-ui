@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import ProfileTabs from "../components/ProfileTabsHandler";
@@ -11,7 +11,7 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProfile();
@@ -31,6 +31,10 @@ export default function Profile() {
       setLoading(false);
     }
   }
+
+const handleMessage = () => {
+    navigate(`/dm?user=${ userId}`);
+  };
 
 const handleFollowToggle = async () => {
   if (!profile) return;
@@ -151,7 +155,14 @@ const handleFollowToggle = async () => {
                 Follow
               </button>
             )}
+            <button
+                onClick={handleMessage}
+                className="btn btn-outline btn-tertiary font-semibold px-6 py-2 mt-2"
+              >
+               Message
+              </button>
           </> )}  
+          
         </div>
         {!isOwnProfile && (
           <div className="ml-auto relative">

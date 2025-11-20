@@ -21,6 +21,10 @@
     @apply btn bg-accent text-white hover:bg-accent/90;
   }
 
+  .btn-tertiary{
+     @apply btn-primary text-white  hover:bg-blue-500;;
+  }
+
  .card-social {
   @apply bg-surface rounded-lg shadow-lg hover:shadow-xl transition-shadow
          flex items-center justify-between p-4 gap-2;
