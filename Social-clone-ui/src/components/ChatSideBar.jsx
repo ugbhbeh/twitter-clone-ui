@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import api from "../services/api";
 import AuthContext from "../services/AuthContext";
 
-export default function Sidebar({ onSelectChat }) {
+export default function ChatSidebar({ onSelectChat }) {
   const { socket, user } = useContext(AuthContext);
 
   const [contacts, setContacts] = useState([]);
