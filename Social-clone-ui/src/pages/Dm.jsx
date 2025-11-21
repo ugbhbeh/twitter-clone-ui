@@ -54,7 +54,7 @@ export default function DMPage() {
   if (!isLoggedIn) return null;
   
  return (
-    <div className="home-container flex flex-col h-screen">
+   
       <div className="main-content flex flex-1 overflow-hidden">
         <div className="relative flex h-full">
           <div
@@ -85,7 +85,7 @@ export default function DMPage() {
           currentUser={{ id: userId }}
         />
       </div>
-    </div>
+   
   );
 }
 
