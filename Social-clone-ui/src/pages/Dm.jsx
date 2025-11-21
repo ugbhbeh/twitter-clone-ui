@@ -1,11 +1,29 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import Sidebar from "../components/ChatSideBar";
 import Chat from "../components/ChatBox";
 import AuthContext from "../services/AuthContext";
 
 export default function DMPage() {
-  const { socket } = useContext(AuthContext);
-  const [activeChat, setActiveChat] = useState(null);
+  const { userId, isLoggedIn } = useContext(AuthContext);
+   const [selectedUser, setSelectedUser] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [socket, setSocket] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const navigate = useNavigate();
+
+ useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/login", { replace: true });
+    }
+  }, [isLoggedIn, navigate, rehydrated]);
+
+
+
+
+
+
+
+
 
   const handleSelect = (chat) => {
     setActiveChat(chat);

@@ -22,6 +22,7 @@ export default function Sidebar({ onSelectChat }) {
         ]);
 
         setContacts(contactsRes.data.contacts || []);
+        console.log(contacts, contactsRes)
         setChats(chatRes.data || []);
 
       } catch (err) {
@@ -30,7 +31,9 @@ export default function Sidebar({ onSelectChat }) {
     };
 
     load();
-  }, [user?.id]);
+  });
+
+
 
   const getOtherUser = (chat) => {
     if (!chat) return null;
@@ -84,8 +87,6 @@ export default function Sidebar({ onSelectChat }) {
 
   return (
     <div className="w-64 border-r flex flex-col h-full bg-white">
-
-     
       <button
         className="m-2 p-2 bg-blue-500 text-white rounded"
         onClick={() => setOverlayOpen(true)}
@@ -98,9 +99,8 @@ export default function Sidebar({ onSelectChat }) {
         placeholder="Search contacts…"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="m-2 px-2 py-1 border rounded"
+        className="m-2 px-2 py-1 border rounded bg-slate-100"
       />
-
    
       <div className="flex-1 overflow-y-auto">
         {chats.length === 0 ? (
@@ -108,7 +108,6 @@ export default function Sidebar({ onSelectChat }) {
         ) : (
           chats.map((chat) => {
             const other = getOtherUser(chat);
-
             return (
               <div
                 key={chat.id}
@@ -139,10 +138,9 @@ export default function Sidebar({ onSelectChat }) {
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto">
-            {filteredContacts.length === 0 ? (
-              <div className="p-2 text-gray-500">No contacts</div>
-            ) : (
+          <div className="absolute top-0 left-0 w-full h-full bg-white border-l shadow-lg z-20 flex flex-col">
+            { 
+            (
               filteredContacts.map((c) => (
                 <div
                   key={c.id}
