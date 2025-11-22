@@ -9,27 +9,30 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
   const [search, setSearch] = useState("");
   const [chats, setChats] = useState([]);
   const [contacts, setContacts] = useState([]);
-  const [allUsers, setAllUsers] = useState([]);
   const [overlayOpen, setOverlayOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(null); 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [chatsRes, contactsRes, usersRes] = await Promise.all([
+        const [chatsRes, contactsRes] = await Promise.all([
           api.get("/chats/"),
           api.get("/chats/contacts"),
-          api.get("/chats/all"),
         ]);
         setChats(chatsRes.data || []);
-        setContacts(contactsRes.data || []);
-        setAllUsers((usersRes.data || []).filter(u => u.id !== currentUserId));
+        setContacts(contactsRes.data || [])
+        setOverlayOpen(false);
+  
       } catch (err) {
         console.error("Failed to fetch data:", err);
       }
     };
     fetchData();
   }, [currentUserId]);
+
+  useEffect(() => {
+  console.log("contacts set", contacts);
+}, [contacts]);
 
   const getFilteredList = (list) => {
     if (!Array.isArray(list)) return [];
@@ -61,7 +64,7 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
       const dmResponse = await api.post(`/chats/${userId}`);
       const dm = dmResponse.data;
       const messagesResponse = await api.get(`/chats/${dm.id}`);
-      const selectedUser = [...contacts, ...allUsers].find(u => u.id === userId);
+      const selectedUser = [...contacts].find(u => u.id === userId);
 
       onSelectUser({
         chatId: dm.id,
@@ -180,11 +183,11 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
   );
 
   const renderOverlay = () => {
-    const list = overlayTab === "contacts" ? contacts : allUsers;
+    const list = overlayTab === "contacts" 
     const filteredList = getFilteredList(list);
 
     return (
-      <div className="absolute top-0 left-0 w-full h-full bg-white border-l shadow-lg z-20 flex flex-col">
+      <div  key={contacts.length} className="absolute left-0 right-0 top-[110%] bg-white border shadow-lg rounded max-h-64 overflow-y-auto z-20">
         <div className="flex items-center justify-between p-2 border-b">
           <div className="flex gap-2">
             <button
@@ -227,38 +230,47 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
   };
 
   return (
-    <div
-      className={`sidebar flex flex-col h-full border-r transition-all duration-300 ${
-        isOpen ? "w-64" : "w-12 overflow-hidden"
-      }`}
-    >
-      {isOpen && (
-        <>
-          <button
-            className="m-2 p-1 bg-blue-500 text-white rounded w-[calc(100%-1rem)]"
-            onClick={() => {
-              setOverlayOpen(!overlayOpen);
-            }}
-          >
-            New Chat
-          </button>
-        </>
-      )}
+  <div
+    style={{ overflow: "visible", background: "yellow" }}
+    className={`sidebar flex flex-col h-full border-r transition-all duration-300 ${
+      isOpen ? "w-64 overflow-visible" : "w-12 overflow-hidden"
+    }`}
+  >
 
-      {isOpen && (
+    {isOpen && (
+      <>
+        <button
+          className="m-2 p-1 bg-blue-500 text-white rounded w-[calc(100%-1rem)]"
+          onClick={() => {
+            setOverlayOpen(!overlayOpen);
+          }}
+        >
+          New Chat
+        </button>
+      </>
+    )}
+
+    {isOpen && (
+      <div className="m-2 relative overflow-visible">
         <input
           type="text"
           placeholder="Search..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full border rounded px-2 py-1 m-2"
+          className="w-full border rounded px-2 py-1"
         />
-      )}
-
-      <div className="flex flex-col flex-1 relative">
-        {activeTab === "chats" && renderChats()}
-        {overlayOpen && renderOverlay()}
       </div>
+    )}
+
+    <div className="flex flex-col flex-1 relative overflow-visible">
+      {activeTab === "chats" && renderChats()}
+
+      {overlayOpen && (
+        <div className="absolute left-0 right-0 top-0 z-50 overflow-visible">
+          {renderOverlay()}
+        </div>
+      )}
     </div>
-  );
-}
+
+  </div>
+)};
