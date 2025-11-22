@@ -11,15 +11,15 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
   const [contacts, setContacts] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [overlayOpen, setOverlayOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(null); // FIX: missing state
+  const [dropdownOpen, setDropdownOpen] = useState(null); 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [chatsRes, contactsRes, usersRes] = await Promise.all([
           api.get("/chats/"),
-          api.get("/users/contacts"),
-          api.get("/users/"),
+          api.get("/chats/contacts"),
+          api.get("/chats/all"),
         ]);
         setChats(chatsRes.data || []);
         setContacts(contactsRes.data || []);
@@ -58,7 +58,7 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
   const handleCreateOrFindDM = async (userId) => {
     try {
       if (!userId) return;
-      const dmResponse = await api.post(`/chats/dm/${userId}`);
+      const dmResponse = await api.post(`/chats/${userId}`);
       const dm = dmResponse.data;
       const messagesResponse = await api.get(`/chats/${dm.id}`);
       const selectedUser = [...contacts, ...allUsers].find(u => u.id === userId);
@@ -82,7 +82,7 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
     } catch (err) {
       console.error("Failed to delete chat:", err);
     }
-  }; // FIX: removed extra brace
+  }; 
 
   const renderUserRow = (user) => {
     const isSelected = selectedUserId === user.id;
@@ -108,7 +108,7 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
           {user.hasBlockedMe && <span className="ml-2 text-sm text-red-500">Blocked you</span>}
         </div>
       </div>
-    ); // FIX: cleaned incorrect ") }"
+    ); 
   };
 
   const renderChats = () => (
@@ -224,7 +224,7 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
         </div>
       </div>
     );
-  }; // FIX: missing closing brace
+  };
 
   return (
     <div
