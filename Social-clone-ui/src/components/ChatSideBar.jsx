@@ -2,163 +2,263 @@ import { useState, useEffect, useContext } from "react";
 import api from "../services/api";
 import AuthContext from "../services/AuthContext";
 
-export default function ChatSidebar({ onSelectChat }) {
-  const { socket, user } = useContext(AuthContext);
-
-  const [contacts, setContacts] = useState([]);
-  const [chats, setChats] = useState([]);
+export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, isOpen }) {
+  const { socket } = useContext(AuthContext);
+  const [activeTab] = useState("chats");
+  const [overlayTab, setOverlayTab] = useState("contacts");
   const [search, setSearch] = useState("");
+  const [chats, setChats] = useState([]);
+  const [contacts, setContacts] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const [overlayOpen, setOverlayOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(null); // FIX: missing state
 
-  // Fetch initial sidebar data
   useEffect(() => {
-    if (!user?.id) return;
-
-    const load = async () => {
+    const fetchData = async () => {
       try {
-        const [contactsRes, chatRes] = await Promise.all([
-          api.get("/chats/contacts"),
-          api.get("/chats")
+        const [chatsRes, contactsRes, usersRes] = await Promise.all([
+          api.get("/chats/"),
+          api.get("/users/contacts"),
+          api.get("/users/"),
         ]);
-
-        setContacts(contactsRes.data.contacts || []);
-        console.log(contacts, contactsRes)
-        setChats(chatRes.data || []);
-
+        setChats(chatsRes.data || []);
+        setContacts(contactsRes.data || []);
+        setAllUsers((usersRes.data || []).filter(u => u.id !== currentUserId));
       } catch (err) {
-        console.error("Sidebar load failed:", err);
+        console.error("Failed to fetch data:", err);
       }
     };
+    fetchData();
+  }, [currentUserId]);
 
-    load();
-  });
-
-
-
-  const getOtherUser = (chat) => {
-    if (!chat) return null;
-    return chat.participantA.id === user.id
-      ? chat.participantB
-      : chat.participantA;
+  const getFilteredList = (list) => {
+    if (!Array.isArray(list)) return [];
+    return list.filter(item =>
+      (item.username || item.name)?.toLowerCase().includes(search.toLowerCase())
+    );
   };
-
-  const filteredContacts = contacts.filter(c =>
-    c.username.toLowerCase().includes(search.toLowerCase())
-  );
 
   const handleOpenChat = async (chatId) => {
     try {
-      const chatRes = await api.get(`/chats/${chatId}`);
-      const chat = chats.find((c) => c.id === chatId);
-      const otherUser = getOtherUser(chat);
-      onSelectChat({
-        dmId: chatId,
-        otherUser,
-        messages: chatRes.data.messages || []
+      const messagesResponse = await api.get(`/chats/${chatId}`);
+      const group = chats.find(c => c.id === chatId);
+
+      onSelectUser({
+        chatId,
+        selectedUser: group,
+        messages: messagesResponse.data.messages,
       });
 
-      socket.emit("join", { room: `dm:${chatId}` });
-
-    } catch (err) {
-      console.error("Failed to open chat:", err);
+      socket.emit("join_group", chatId);
+    } catch (error) {
+      console.error("Failed to open chat:", error);
     }
   };
 
-
-  const handleStartDM = async (otherUserId) => {
+  const handleCreateOrFindDM = async (userId) => {
     try {
-      const dm = (await api.post(`/chats/${otherUserId}`)).data;
+      if (!userId) return;
+      const dmResponse = await api.post(`/chats/dm/${userId}`);
+      const dm = dmResponse.data;
+      const messagesResponse = await api.get(`/chats/${dm.id}`);
+      const selectedUser = [...contacts, ...allUsers].find(u => u.id === userId);
 
-      const msgRes = await api.get(`/chats/${dm.id}`);
-      const otherUser = contacts.find(c => c.id === otherUserId);
-
-      onSelectChat({
-        dmId: dm.id,
-        otherUser,
-        messages: msgRes.data.messages || []
+      onSelectUser({
+        chatId: dm.id,
+        selectedUser,
+        messages: messagesResponse.data.messages,
       });
 
-      socket.emit("join", { room: `dm:${dm.id}` });
-
-    } catch (err) {
-      console.error("DM creation error:", err);
+      socket.emit("join_group", dm.id);
+    } catch (error) {
+      console.error("Failed to initialize DM:", error);
     }
   };
 
-  return (
-    <div className="w-64 border-r flex flex-col h-full bg-white">
-      <button
-        className="m-2 p-2 bg-blue-500 text-white rounded"
-        onClick={() => setOverlayOpen(true)}
+  const handleDeleteChat = async (chatId) => {
+    try {
+      await api.delete(`/chats/${chatId}`);
+      setChats((prev) => prev.filter((c) => c.id !== chatId));
+    } catch (err) {
+      console.error("Failed to delete chat:", err);
+    }
+  }; // FIX: removed extra brace
+
+  const renderUserRow = (user) => {
+    const isSelected = selectedUserId === user.id;
+    return (
+      <div
+        key={user.id}
+        className={`flex items-center justify-between p-1 border-b cursor-pointer relative ${
+          isSelected ? "bg-gray-200" : "hover:bg-gray-100"
+        }`}
+        onClick={() => handleCreateOrFindDM(user.id)}
       >
-        New Chat
-      </button>
-
-      <input
-        type="text"
-        placeholder="Search contacts…"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="m-2 px-2 py-1 border rounded bg-slate-100"
-      />
-   
-      <div className="flex-1 overflow-y-auto">
-        {chats.length === 0 ? (
-          <div className="p-2 text-gray-500">No chats</div>
-        ) : (
-          chats.map((chat) => {
-            const other = getOtherUser(chat);
-            return (
-              <div
-                key={chat.id}
-                onClick={() => handleOpenChat(chat.id)}
-                className="p-2 flex items-center cursor-pointer hover:bg-gray-100 border-b"
-              >
-                <img
-                  src={other.profileImage || "/images/default-avatar.png"}
-                  className="w-8 h-8 rounded-full object-cover mr-2"
-                />
-                <span className="truncate">{other.username}</span>
-              </div>
-            );
-          })
-        )}
+        <div className="flex items-center gap-2 px-2">
+          {user.profileImage && !user.hasBlockedMe ? (
+            <img
+              src={user.profileImage}
+              alt={user.username}
+              className="w-8 h-8 rounded-full object-cover"
+            />
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-gray-300" />
+          )}
+          <span className="truncate max-w-[120px]">{user.username}</span>
+          {user.hasBlockedMe && <span className="ml-2 text-sm text-red-500">Blocked you</span>}
+        </div>
       </div>
+    ); // FIX: cleaned incorrect ") }"
+  };
 
-      {overlayOpen && (
-        <div className="absolute inset-0 bg-white shadow-lg z-20 flex flex-col">
+  const renderChats = () => (
+    <div className="flex-1 overflow-y-auto">
+      {chats.length ? (
+        chats.map(chat => {
+          const displayName = chat.isDirect
+            ? chat.members.find(m => m.id !== currentUserId)?.username
+            : chat.name;
+          const isSelected = selectedUserId === chat.id;
 
-          <div className="flex justify-between items-center p-2 border-b">
-            <span className="font-bold">Contacts</span>
-            <button
-              className="text-xl px-2"
-              onClick={() => setOverlayOpen(false)}
+          return (
+            <div
+              key={chat.id}
+              className={`flex items-center justify-between p-1 border-b cursor-pointer ${
+                isSelected ? "bg-gray-200" : "hover:bg-gray-100"
+              }`}
+              onClick={() => handleOpenChat(chat.id)}
             >
-              ✕
+              <div className="flex items-center gap-2 px-2">
+                {chat.isDirect ? (
+                  <img
+                    src={
+                      chat.members.find(m => m.id !== currentUserId)?.profileImage ||
+                      "/images/default-avatar.png"
+                    }
+                    alt={displayName}
+                    className="w-8 h-8 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-blue-300 flex items-center justify-center text-white font-bold">
+                    {displayName?.charAt(0)}
+                  </div>
+                )}
+                <span className="truncate max-w-[120px]">{displayName}</span>
+              </div>
+
+              <div className="relative" onClick={(e) => e.stopPropagation()}>
+                <button
+                  onClick={() =>
+                    setDropdownOpen(dropdownOpen === chat.id ? null : chat.id)
+                  }
+                  className="px-2 py-1 text-gray-600 hover:text-black"
+                >
+                  ⋮
+                </button>
+
+                {dropdownOpen === chat.id && (
+                  <div className="absolute right-0 top-6 bg-white border rounded shadow-md text-sm z-10">
+                    <button
+                      className="block w-full text-left px-3 py-1 hover:bg-gray-100 text-red-600"
+                      onClick={() => {
+                        setDropdownOpen(null);
+                        handleDeleteChat(chat.id);
+                      }}
+                    >
+                      {chat.isDirect ? "Delete Chat" : "Leave Group"}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })
+      ) : (
+        <div className="text-gray-500 py-2 px-2">No chats yet</div>
+      )}
+    </div>
+  );
+
+  const renderOverlay = () => {
+    const list = overlayTab === "contacts" ? contacts : allUsers;
+    const filteredList = getFilteredList(list);
+
+    return (
+      <div className="absolute top-0 left-0 w-full h-full bg-white border-l shadow-lg z-20 flex flex-col">
+        <div className="flex items-center justify-between p-2 border-b">
+          <div className="flex gap-2">
+            <button
+              className={`px-2 py-1 rounded ${
+                overlayTab === "contacts" ? "bg-blue-500 text-white" : "bg-gray-200"
+              }`}
+              onClick={() => setOverlayTab("contacts")}
+            >
+              Contacts
+            </button>
+
+            <button
+              className={`px-2 py-1 rounded ${
+                overlayTab === "allUsers" ? "bg-blue-500 text-white" : "bg-gray-200"
+              }`}
+              onClick={() => setOverlayTab("allUsers")}
+            >
+              All Users
             </button>
           </div>
-
-          <div className="absolute top-0 left-0 w-full h-full bg-white border-l shadow-lg z-20 flex flex-col">
-            { 
-            (
-              filteredContacts.map((c) => (
-                <div
-                  key={c.id}
-                  onClick={() => handleStartDM(c.id)}
-                  className="p-2 flex items-center cursor-pointer hover:bg-gray-100 border-b"
-                >
-                  <img
-                    src={c.profileImage || "/images/default-avatar.png"}
-                    className="w-8 h-8 rounded-full object-cover mr-2"
-                  />
-                  <span className="truncate">{c.username}</span>
-                </div>
-              ))
-            )}
-          </div>
-
+          <button
+            className="px-2 py-1"
+            onClick={() => {
+              setOverlayOpen(false);
+            }}
+          >
+            ✕
+          </button>
         </div>
+
+        <div className="flex-1 overflow-y-auto">
+          {filteredList.length ? (
+            filteredList.map(renderUserRow)
+          ) : (
+            <div className="text-gray-500 py-2 px-2">No users found</div>
+          )}
+        </div>
+      </div>
+    );
+  }; // FIX: missing closing brace
+
+  return (
+    <div
+      className={`sidebar flex flex-col h-full border-r transition-all duration-300 ${
+        isOpen ? "w-64" : "w-12 overflow-hidden"
+      }`}
+    >
+      {isOpen && (
+        <>
+          <button
+            className="m-2 p-1 bg-blue-500 text-white rounded w-[calc(100%-1rem)]"
+            onClick={() => {
+              setOverlayOpen(!overlayOpen);
+            }}
+          >
+            New Chat
+          </button>
+        </>
       )}
+
+      {isOpen && (
+        <input
+          type="text"
+          placeholder="Search..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full border rounded px-2 py-1 m-2"
+        />
+      )}
+
+      <div className="flex flex-col flex-1 relative">
+        {activeTab === "chats" && renderChats()}
+        {overlayOpen && renderOverlay()}
+      </div>
     </div>
   );
 }
