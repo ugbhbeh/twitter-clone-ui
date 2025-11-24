@@ -28,7 +28,7 @@ function App() {
       <AuthProvider>
         <div className="min-h-screen bg-background">
           <TopBar className="sticky top-0 z-50" />
-          <main className="container-app py-6">
+          <main className="container-app py-6 h-full">
             <Routes>
               <Route path="/" element={<Home isAuthenticated={isAuthenticated} /> } />
               <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to ="/" /> } />
