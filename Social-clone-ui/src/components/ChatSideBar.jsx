@@ -237,7 +237,6 @@ return (
     }`}
   >
 
-    {/* NEW CHAT BUTTON */}
     {isOpen && (
       <button
         className="m-2 p-1 bg-blue-500 text-white rounded w-[calc(100%-1rem)]"
@@ -246,8 +245,7 @@ return (
         New Chat
       </button>
     )}
-
-    {/* SEARCH BAR */}
+    
     {isOpen && (
       <div className="m-2 relative">
         <input
