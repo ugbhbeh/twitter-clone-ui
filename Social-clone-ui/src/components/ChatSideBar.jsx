@@ -183,7 +183,8 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
   );
 
   const renderOverlay = () => {
-    const list = overlayTab === "contacts" 
+  const list = overlayTab === "contacts" ? contacts : contacts;
+
     const filteredList = getFilteredList(list);
 
     return (
@@ -232,9 +233,9 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
   return (
   <div
     style={{ overflow: "visible", background: "yellow" }}
-    className={`sidebar flex flex-col h-full border-r transition-all duration-300 ${
-      isOpen ? "w-64 overflow-visible" : "w-12 overflow-hidden"
-    }`}
+    className={`sidebar relative flex flex-col h-full border-r transition-all duration-300 ${
+      isOpen ? "w-64 overflow-visible" : "w-12 overflow-visible"}
+    `}
   >
 
     {isOpen && (
@@ -262,15 +263,16 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
       </div>
     )}
 
-    <div className="flex flex-col flex-1 relative overflow-visible">
-      {activeTab === "chats" && renderChats()}
-
-      {overlayOpen && (
-        <div className="absolute left-0 right-0 top-0 z-50 overflow-visible">
-          {renderOverlay()}
+        <div className="flex flex-col flex-1 relative">
+          {activeTab === "chats" && renderChats()}
         </div>
-      )}
-    </div>
+
+        {overlayOpen && (
+          <div className="absolute left-0 right-0 top-12 z-50">
+            {renderOverlay()}
+          </div>
+        )}
+
 
   </div>
 )};

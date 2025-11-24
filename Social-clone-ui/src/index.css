@@ -44,16 +44,3 @@
     @apply text-accent hover:text-primary transition-colors;
   }
 }
-
-/* Custom scrollbar for webkit browsers */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-background;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-accent/50 rounded-full hover:bg-accent/70;
-}

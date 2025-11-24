@@ -55,7 +55,7 @@ export default function DMPage() {
   
  return (
    
-      <div className="main-content flex flex-1 overflow-hidden">
+      <div className=" h-full main-content flex flex-1 ">
         <div className="relative flex h-full">
           <div
             className={`transition-all duration-200 h-full ${
