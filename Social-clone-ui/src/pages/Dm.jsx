@@ -53,40 +53,42 @@ export default function DMPage() {
 
   if (!isLoggedIn) return null;
   
- return (
-   
-      <div className=" h-full main-content flex flex-1 ">
-        <div className="relative flex h-full">
-          <div
-            className={`transition-all duration-200 h-full ${
-              sidebarOpen ? "w-64" : "w-0"
-            } overflow-hidden`}
-          >
-            <ChatSidebar
-              currentUserId={userId}
-              selectedUserId={selectedUser?.id || null}
-              onSelectUser={handleSelectUser}
-              isOpen={sidebarOpen}
-            />
-          </div>
-          <div
-            className="w-8 h-full bg-gray-200 flex items-center justify-center cursor-pointer"
-            onClick={() => setSidebarOpen((prev) => !prev)}
-          >
-            <span className="text-gray-600 rotate-90">⋮</span>
-          </div>
-        </div>
-
-        <Chat
-          selectedUser={selectedUser}
-          messages={messages}
-          groupId={chatId}
-          socket={socket}
-          currentUser={{ id: userId }}
+return (
+  <div className="min-h-[calc(100vh-64px)] flex">
+    {/* Sidebar + toggle button */}
+    <div className="relative flex h-full">
+      <div
+        className={`transition-all duration-200 h-full ${
+          sidebarOpen ? "w-64" : "w-0"
+        } overflow-hidden`}
+      >
+        <ChatSidebar
+          currentUserId={userId}
+          selectedUserId={selectedUser?.id || null}
+          onSelectUser={handleSelectUser}
+          isOpen={sidebarOpen}
         />
       </div>
-   
-  );
+
+      <div
+        className="w-8 h-full bg-gray-200 flex items-center justify-center cursor-pointer"
+        onClick={() => setSidebarOpen((prev) => !prev)}
+      >
+        <span className="text-gray-600 rotate-90">⋮</span>
+      </div>
+    </div>
+
+    {/* Chat box */}
+    <Chat
+      selectedUser={selectedUser}
+      messages={messages}
+      groupId={chatId}
+      socket={socket}
+      currentUser={{ id: userId }}
+    />
+  </div>
+);
+
 }
 
 
