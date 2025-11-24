@@ -230,29 +230,26 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
     );
   };
 
-  return (
+return (
   <div
-    style={{ overflow: "visible", background: "yellow" }}
     className={`sidebar relative flex flex-col h-full border-r transition-all duration-300 ${
-      isOpen ? "w-64 overflow-visible" : "w-12 overflow-visible"}
-    `}
+      isOpen ? "w-64" : "w-12"
+    }`}
   >
 
+    {/* NEW CHAT BUTTON */}
     {isOpen && (
-      <>
-        <button
-          className="m-2 p-1 bg-blue-500 text-white rounded w-[calc(100%-1rem)]"
-          onClick={() => {
-            setOverlayOpen(!overlayOpen);
-          }}
-        >
-          New Chat
-        </button>
-      </>
+      <button
+        className="m-2 p-1 bg-blue-500 text-white rounded w-[calc(100%-1rem)]"
+        onClick={() => setOverlayOpen(!overlayOpen)}
+      >
+        New Chat
+      </button>
     )}
 
+    {/* SEARCH BAR */}
     {isOpen && (
-      <div className="m-2 relative overflow-visible">
+      <div className="m-2 relative">
         <input
           type="text"
           placeholder="Search..."
@@ -263,16 +260,17 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
       </div>
     )}
 
-        <div className="flex flex-col flex-1 relative">
-          {activeTab === "chats" && renderChats()}
-        </div>
 
-        {overlayOpen && (
-          <div className="absolute left-0 right-0 top-12 z-50">
-            {renderOverlay()}
-          </div>
-        )}
+    <div className="flex-1 min-h-0 overflow-y-auto">
+      {activeTab === "chats" && renderChats()}
+    </div>
 
 
+    {overlayOpen && (
+      <div className="absolute left-0 right-0 top-12 z-50">
+        {renderOverlay()}
+      </div>
+    )}
   </div>
-)};
+);
+}

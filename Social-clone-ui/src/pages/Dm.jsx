@@ -54,9 +54,9 @@ export default function DMPage() {
   if (!isLoggedIn) return null;
   
 return (
-  <div className="min-h-[calc(100vh-64px)] flex">
-    {/* Sidebar + toggle button */}
+  <div className="flex h-[calc(100vh-64px)] mt-5">
     <div className="relative flex h-full">
+      {/* sidebar */}
       <div
         className={`transition-all duration-200 h-full ${
           sidebarOpen ? "w-64" : "w-0"
@@ -78,7 +78,6 @@ return (
       </div>
     </div>
 
-    {/* Chat box */}
     <Chat
       selectedUser={selectedUser}
       messages={messages}
@@ -88,6 +87,7 @@ return (
     />
   </div>
 );
+
 
 }
 

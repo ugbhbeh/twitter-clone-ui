@@ -27,7 +27,8 @@ function App() {
      <BrowserRouter>
   <AuthProvider>
     <div className="min-h-screen bg-background">
-      <TopBar className="sticky top-0 z-50" />
+     <TopBar className="sticky top-0 z-50 border-b border-gray-200 shadow-sm" />
+
               <Routes>
                  <Route path="/dm" element={<DMPage />} />
                 <Route path="/" element={<Home isAuthenticated={isAuthenticated} />} />
