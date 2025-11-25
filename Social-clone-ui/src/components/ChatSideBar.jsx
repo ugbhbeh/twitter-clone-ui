@@ -30,9 +30,6 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
     fetchData();
   }, [currentUserId]);
 
-  useEffect(() => {
-  console.log("contacts set", contacts);
-}, [contacts]);
 
   const getFilteredList = (list) => {
     if (!Array.isArray(list)) return [];

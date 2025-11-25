@@ -35,7 +35,9 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     if (!token) return;
 
-    const s = io("http://localhost:8080", { auth: { token } });
+    const s = io("http://localhost:8080", { auth: { token },    
+   transports: ["websocket"] });
+
     socketRef.current = s;
     setSocket(s);
 

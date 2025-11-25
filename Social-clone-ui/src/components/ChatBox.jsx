@@ -17,7 +17,7 @@ export default function Chat({ selectedUser, messages, chatId, socket, currentUs
     if (!socket) return;
 
     const handleReceive = (message) => {
-      if (message.chat_id === chatId) {
+     if (message.dmId === chatId){
         setLocalMessages((prev) => {
           const exists = prev.some((m) => m.id === message.id);
           if (exists) return prev;
@@ -32,7 +32,7 @@ export default function Chat({ selectedUser, messages, chatId, socket, currentUs
 
   const handleSend = () => {
     if (!newMessage.trim()) return;
-    socket.emit("send_message", { content: newMessage, chatId });
+    socket.emit("send_message", { content: newMessage, dmId: chatId });
     setNewMessage("");
   };
 
