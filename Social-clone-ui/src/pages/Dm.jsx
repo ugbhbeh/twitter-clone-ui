@@ -20,30 +20,27 @@ export default function DMPage() {
       navigate("/login", { replace: true });
     }
   }, [isLoggedIn, navigate]);
-
+ 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
+  const token = localStorage.getItem("token");
+  if (!token) return;
 
-    const newSocket = io("http://localhost:8080", {
-      auth: { token },
-    });
+  const newSocket = io("http://localhost:8080", {
+    auth: { token },
+  });
 
-    newSocket.on("receive_message", (message) => {
-      setMessages((prev) => {
-        if (message.chatId === chatId) {
-          return [...prev, message];
-        }
-        return prev;
-      });
-    });
+  setSocket(newSocket);
 
-    setSocket(newSocket);
+  return () => newSocket.disconnect();
+}, []);  
 
-    return () => {
-      newSocket.disconnect();
-    };
-  }, [chatId]); 
+useEffect(() => {
+  if (!socket || !chatId) return;
+
+  socket.emit("joinRoom", chatId);
+
+}, [socket, chatId]);
+
 
   const handleSelectUser = ({ chatId, selectedUser, messages }) => {
     setSelectedUser(selectedUser);
@@ -56,7 +53,6 @@ export default function DMPage() {
 return (
   <div className="flex h-[calc(100vh-64px)] mt-5">
     <div className="relative flex h-full">
-      {/* sidebar */}
       <div
         className={`transition-all duration-200 h-full ${
           sidebarOpen ? "w-64" : "w-0"
@@ -81,7 +77,7 @@ return (
     <Chat
       selectedUser={selectedUser}
       messages={messages}
-      groupId={chatId}
+      chatId={chatId}
       socket={socket}
       currentUser={{ id: userId }}
     />

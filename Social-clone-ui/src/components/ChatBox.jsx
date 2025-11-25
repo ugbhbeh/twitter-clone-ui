@@ -32,7 +32,9 @@ export default function Chat({ selectedUser, messages, chatId, socket, currentUs
 
   const handleSend = () => {
     if (!newMessage.trim()) return;
+    console.log("sttempting to send message", newMessage)
     socket.emit("send_message", { content: newMessage, dmId: chatId });
+    console.log("message sent")
     setNewMessage("");
   };
 
