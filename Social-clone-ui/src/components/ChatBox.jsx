@@ -32,9 +32,7 @@ export default function Chat({ selectedUser, messages, chatId, socket, currentUs
 
   const handleSend = () => {
     if (!newMessage.trim()) return;
-    console.log("sttempting to send message", newMessage)
     socket.emit("send_message", { content: newMessage, dmId: chatId });
-    console.log("message sent")
     setNewMessage("");
   };
 
@@ -48,7 +46,6 @@ export default function Chat({ selectedUser, messages, chatId, socket, currentUs
  return (
     <div className="flex flex-col flex-1 h-full bg-gray-50">
 
-      {/* HEADER */}
       <div className="flex items-center gap-3 p-4 border-b bg-white shadow-sm">
         <img
           src={selectedUser.profileImage || "/default-avatar.png"}
@@ -58,7 +55,6 @@ export default function Chat({ selectedUser, messages, chatId, socket, currentUs
         <div className="font-semibold">{selectedUser.username}</div>
       </div>
 
-      {/* MESSAGE AREA */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-100">
         {localMessages.map((msg) => {
           const senderId = msg.sender_id || msg.senderId;

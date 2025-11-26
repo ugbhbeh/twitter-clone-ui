@@ -95,9 +95,9 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
         onClick={() => handleCreateOrFindDM(user.id)}
       >
         <div className="flex items-center gap-2 px-2">
-          {user.profileImage && !user.hasBlockedMe ? (
+          {contacts.profileImage && !user.hasBlockedMe ? (
             <img
-              src={user.profileImage}
+              src={chats.profileImage}
               alt={user.username}
               className="w-8 h-8 rounded-full object-cover"
             />
@@ -115,9 +115,7 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
     <div className="flex-1 overflow-y-auto">
       {chats.length ? (
         chats.map(chat => {
-          const displayName = chat.isDirect
-            ? chat.members.find(m => m.id !== currentUserId)?.username
-            : chat.name;
+          const displayName = chat.name;
           const isSelected = selectedUserId === chat.id;
 
           return (
@@ -129,20 +127,11 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
               onClick={() => handleOpenChat(chat.id)}
             >
               <div className="flex items-center gap-2 px-2">
-                {chat.isDirect ? (
-                  <img
-                    src={
-                      chat.members.find(m => m.id !== currentUserId)?.profileImage ||
-                      "/images/default-avatar.png"
-                    }
-                    alt={displayName}
-                    className="w-8 h-8 rounded-full object-cover"
-                  />
-                ) : (
+
                   <div className="w-8 h-8 rounded-full bg-blue-300 flex items-center justify-center text-white font-bold">
                     {displayName?.charAt(0)}
                   </div>
-                )}
+               
                 <span className="truncate max-w-[120px]">{displayName}</span>
               </div>
 
@@ -165,7 +154,7 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
                         handleDeleteChat(chat.id);
                       }}
                     >
-                      {chat.isDirect ? "Delete Chat" : "Leave Group"}
+                     Delete Chat
                     </button>
                   </div>
                 )}
@@ -250,7 +239,7 @@ return (
           placeholder="Search..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full border rounded px-2 py-1"
+          className="w-full border rounded px-2 py-1 bg-slate-100"
         />
       </div>
     )}
@@ -259,7 +248,6 @@ return (
     <div className="flex-1 min-h-0 overflow-y-auto">
       {activeTab === "chats" && renderChats()}
     </div>
-
 
     {overlayOpen && (
       <div className="absolute left-0 right-0 top-12 z-50">
