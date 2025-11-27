@@ -30,6 +30,9 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
     fetchData();
   }, [currentUserId]);
 
+  useEffect(() => {
+    console.log(contacts)
+  }, [contacts])
 
   const getFilteredList = (list) => {
     if (!Array.isArray(list)) return [];
@@ -95,9 +98,9 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
         onClick={() => handleCreateOrFindDM(user.id)}
       >
         <div className="flex items-center gap-2 px-2">
-          {contacts.profileImage && !user.hasBlockedMe ? (
+          {user.profileImage && !user.hasBlockedMe ? (
             <img
-              src={chats.profileImage}
+              src={user.profileImage}
               alt={user.username}
               className="w-8 h-8 rounded-full object-cover"
             />
