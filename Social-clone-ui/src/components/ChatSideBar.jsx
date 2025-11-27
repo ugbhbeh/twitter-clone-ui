@@ -115,61 +115,71 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
   };
 
   const renderChats = () => (
-    <div className="flex-1 overflow-y-auto">
-      {chats.length ? (
-        chats.map(chat => {
-          const displayName = chat.name;
-          const isSelected = selectedUserId === chat.id;
+  <div className="flex-1 overflow-y-auto">
+    {chats.length ? (
+      chats.map(chat => {
+        const isSelected = selectedUserId === chat.id;
 
-          return (
-            <div
-              key={chat.id}
-              className={`flex items-center justify-between p-1 border-b cursor-pointer ${
-                isSelected ? "bg-gray-200" : "hover:bg-gray-100"
-              }`}
-              onClick={() => handleOpenChat(chat.id)}
-            >
-              <div className="flex items-center gap-2 px-2">
+        return (
+          <div
+            key={chat.id}
+            className={`flex items-center justify-between p-1 border-b cursor-pointer ${
+              isSelected ? "bg-gray-200" : "hover:bg-gray-100"
+            }`}
+            onClick={() => handleOpenChat(chat.id)}
+          >
+            <div className="flex items-center gap-2 px-2">
 
-                  <div className="w-8 h-8 rounded-full bg-blue-300 flex items-center justify-center text-white font-bold">
-                    {displayName?.charAt(0)}
-                  </div>
-               
-                <span className="truncate max-w-[120px]">{displayName}</span>
-              </div>
+              <img
+                src={chat.otherUser.profileImage || "/default-avatar.png"}
+                className="w-8 h-8 rounded-full object-cover"
+                alt={chat.otherUser.username}
+              />
 
-              <div className="relative" onClick={(e) => e.stopPropagation()}>
-                <button
-                  onClick={() =>
-                    setDropdownOpen(dropdownOpen === chat.id ? null : chat.id)
-                  }
-                  className="px-2 py-1 text-gray-600 hover:text-black"
-                >
-                  ⋮
-                </button>
+              <div className="flex flex-col max-w-[140px]">
+                <span className="truncate font-semibold">
+                  {chat.otherUser.username}
+                </span>
 
-                {dropdownOpen === chat.id && (
-                  <div className="absolute right-0 top-6 bg-white border rounded shadow-md text-sm z-10">
-                    <button
-                      className="block w-full text-left px-3 py-1 hover:bg-gray-100 text-red-600"
-                      onClick={() => {
-                        setDropdownOpen(null);
-                        handleDeleteChat(chat.id);
-                      }}
-                    >
-                     Delete Chat
-                    </button>
-                  </div>
-                )}
+                <span className="truncate text-sm text-gray-500">
+                  {chat.lastMessage?.content || "No messages yet"}
+                </span>
               </div>
             </div>
-          );
-        })
-      ) : (
-        <div className="text-gray-500 py-2 px-2">No chats yet</div>
-      )}
-    </div>
-  );
+
+            <div className="relative" onClick={(e) => e.stopPropagation()}>
+              <button
+                onClick={() =>
+                  setDropdownOpen(dropdownOpen === chat.id ? null : chat.id)
+                }
+                className="px-2 py-1 text-gray-600 hover:text-black"
+              >
+                ⋮
+              </button>
+
+              {dropdownOpen === chat.id && (
+                <div className="absolute right-0 top-6 bg-white border rounded shadow-md text-sm z-10">
+                  <button
+                    className="block w-full text-left px-3 py-1 hover:bg-gray-100 text-red-600"
+                    onClick={() => {
+                      setDropdownOpen(null);
+                      handleDeleteChat(chat.id);
+                    }}
+                  >
+                    Delete Chat
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      })
+    ) : (
+      <div className="text-gray-500 py-2 px-2">No chats yet</div>
+    )}
+  </div>
+);
+
 
   const renderOverlay = () => {
   const list = overlayTab === "contacts" ? contacts : contacts;
