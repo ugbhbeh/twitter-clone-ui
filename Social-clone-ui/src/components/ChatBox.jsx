@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 
-export default function Chat({ selectedUser, messages, chatId, socket, currentUser }) {
+export default function Chat({ selectedUser, messages, chatId, socket, currentUser}) {
   const [localMessages, setLocalMessages] = useState(messages || []);
   const [newMessage, setNewMessage] = useState("");
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef(null)
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -57,7 +57,7 @@ export default function Chat({ selectedUser, messages, chatId, socket, currentUs
 
       <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-100">
         {localMessages.map((msg) => {
-          const senderId = msg.sender_id || msg.senderId;
+          const senderId = msg.sender_id
           const isOwn = String(senderId) === String(currentUser.id);
 
           return (
@@ -89,12 +89,11 @@ export default function Chat({ selectedUser, messages, chatId, socket, currentUs
         <div ref={messagesEndRef} />
       </div>
 
-      {/* INPUT BAR */}
       <div className="p-4 border-t bg-white flex items-center gap-2">
         <input
           type="text"
           placeholder="Type a message..."
-          className="flex-1 border rounded-lg px-3 py-2 outline-none focus:ring focus:ring-blue-300"
+          className="flex-1 border rounded-lg px-3 py-2 outline-none focus:ring focus:ring-blue-300 bg-slate-200"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}

@@ -42,10 +42,10 @@ useEffect(() => {
 }, [socket, chatId]);
 
 
-  const handleSelectUser = ({ chatId, selectedUser, messages }) => {
+  const handleSelectUser = ({ chatId, selectedUser, messages}) => {
     setSelectedUser(selectedUser);
     setChatId(chatId);
-    setMessages(messages || []);
+    setMessages(messages || [])
   };
 
   if (!isLoggedIn) return null;
