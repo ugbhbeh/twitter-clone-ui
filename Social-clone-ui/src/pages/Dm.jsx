@@ -12,6 +12,7 @@ export default function DMPage() {
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+ 
   const [chatId, setChatId] = useState(null);
   const navigate = useNavigate();
 

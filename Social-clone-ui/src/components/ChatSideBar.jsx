@@ -30,10 +30,6 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
     fetchData();
   }, [currentUserId]);
 
-  useEffect(() => {
-    console.log(contacts)
-  }, [contacts])
-
   const getFilteredList = (list) => {
     if (!Array.isArray(list)) return [];
     return list.filter(item =>
@@ -42,21 +38,21 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
   };
 
   const handleOpenChat = async (chatId) => {
-    try {
-      const messagesResponse = await api.get(`/chats/${chatId}`);
-      const group = chats.find(c => c.id === chatId);
+  try {
+    const messagesResponse = await api.get(`/chats/${chatId}`);
+    const group = chats.find(c => c.id === chatId);
 
-      onSelectUser({
-        chatId,
-        selectedUser: group,
-        messages: messagesResponse.data.messages,
-      });
+    onSelectUser({
+      chatId,
+      selectedUser: group.otherUser,  
+      messages: messagesResponse.data.messages,
+    });
 
-      socket.emit("join_group", chatId);
-    } catch (error) {
-      console.error("Failed to open chat:", error);
-    }
-  };
+    socket.emit("join_group", chatId);
+  } catch (error) {
+    console.error("Failed to open chat:", error);
+  }
+};
 
   const handleCreateOrFindDM = async (userId) => {
     try {
