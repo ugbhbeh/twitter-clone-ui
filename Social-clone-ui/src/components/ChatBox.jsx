@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 
 export default function Chat({ selectedUser, messages, chatId, socket, currentUser}) {
+ 
   const [localMessages, setLocalMessages] = useState(messages || []);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef(null)

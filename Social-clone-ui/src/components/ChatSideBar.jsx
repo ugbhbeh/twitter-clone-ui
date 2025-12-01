@@ -9,18 +9,21 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
   const [search, setSearch] = useState("");
   const [chats, setChats] = useState([]);
   const [contacts, setContacts] = useState([]);
+  const [users, setUsers] = useState([])
   const [overlayOpen, setOverlayOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(null); 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [chatsRes, contactsRes] = await Promise.all([
+        const [chatsRes, contactsRes, usersRes] = await Promise.all([
           api.get("/chats/"),
           api.get("/chats/contacts"),
+          api.get("/chats/users")
         ]);
         setChats(chatsRes.data || []);
         setContacts(contactsRes.data || [])
+        setUsers(usersRes.data || [])
         setOverlayOpen(false);
   
       } catch (err) {
@@ -54,25 +57,30 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
   }
 };
 
-  const handleCreateOrFindDM = async (userId) => {
-    try {
-      if (!userId) return;
-      const dmResponse = await api.post(`/chats/${userId}`);
-      const dm = dmResponse.data;
-      const messagesResponse = await api.get(`/chats/${dm.id}`);
-      const selectedUser = [...contacts].find(u => u.id === userId);
+ const handleCreateOrFindDM = async (userId) => {
+  try {
+    if (!userId) return;
 
-      onSelectUser({
-        chatId: dm.id,
-        selectedUser,
-        messages: messagesResponse.data.messages,
-      });
+    const dmResponse = await api.post(`/chats/${userId}`);
+    const dm = dmResponse.data;
 
-      socket.emit("join_group", dm.id);
-    } catch (error) {
-      console.error("Failed to initialize DM:", error);
-    }
-  };
+    const messagesResponse = await api.get(`/chats/${dm.id}`);
+
+    const selectedUser =
+      contacts.find(u => u.id === userId) ||
+      users.find(u => u.id === userId);
+
+    onSelectUser({
+      chatId: dm.id,
+      selectedUser,
+      messages: messagesResponse.data.messages,
+    });
+
+    socket.emit("join_group", dm.id);
+  } catch (error) {
+    console.error("Failed to initialize DM:", error);
+  }
+};
 
   const handleDeleteChat = async (chatId) => {
     try {
@@ -178,12 +186,12 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
 
 
   const renderOverlay = () => {
-  const list = overlayTab === "contacts" ? contacts : contacts;
+  const list = overlayTab === "contacts" ? contacts : users;
 
     const filteredList = getFilteredList(list);
 
     return (
-      <div  key={contacts.length} className="absolute left-0 right-0 top-[110%] bg-white border shadow-lg rounded max-h-64 overflow-y-auto z-20">
+      <div  key={contacts.length} className="absolute left-0 right-0 top-[110%] bg-white border shadow-lg rounded max-h-[70vh] overflow-y-auto z-20">
         <div className="flex items-center justify-between p-2 border-b">
           <div className="flex gap-2">
             <button
