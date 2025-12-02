@@ -64,7 +64,7 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
   }
 };
 
- const handleCreateOrFindDM = async (userId) => {
+const handleCreateOrFindDM = async (userId) => {
   try {
     if (!userId) return;
 
@@ -73,13 +73,23 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
 
     const messagesResponse = await api.get(`/chats/${dm.id}`);
 
-    const selectedUser =
-      contacts.find(u => u.id === userId) ||
-      users.find(u => u.id === userId);
+    const otherUser =
+      dm.participantA.id === currentUserId ? dm.participantB : dm.participantA;
+
+    setChats((prevChats) => {
+      const exists = prevChats.find(c => c.id === dm.id);
+      if (exists) {
+        return prevChats.map(c =>
+          c.id === dm.id ? { ...c, otherUser, lastMessage: dm.lastMessage } : c
+        );
+      }
+   
+      return [{ ...dm, otherUser }, ...prevChats];
+    });
 
     onSelectUser({
       chatId: dm.id,
-      selectedUser,
+      selectedUser: otherUser,
       messages: messagesResponse.data.messages,
     });
 
@@ -88,6 +98,7 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
     console.error("Failed to initialize DM:", error);
   }
 };
+
 
   const handleDeleteChat = async (chatId) => {
     try {
