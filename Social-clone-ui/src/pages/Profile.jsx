@@ -22,6 +22,7 @@ export default function Profile() {
     try {
       const res = await api.get(`/users/${userId}/profile`);
       setProfile(res.data);
+
       setBioInput(res.data.bio || "");
       setError(null);
     } catch (err) {
@@ -32,8 +33,14 @@ export default function Profile() {
     }
   }
 
+   useEffect( () => {
+    if (!profile) return;  
+       console.log(profile.id)
+   },[profile])
+
 const handleMessage = () => {
-    navigate(`/dm?user=${ userId}`);
+   if (!profile) return;
+    navigate("/dm", { state: { openWith: profile.id} });
   };
 
 const handleFollowToggle = async () => {

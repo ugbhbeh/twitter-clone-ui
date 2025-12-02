@@ -1,6 +1,6 @@
 
 import { useState, useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import ChatSidebar from "../components/ChatSideBar";
 import Chat from "../components/ChatBox";
 import AuthContext from "../services/AuthContext";
@@ -15,6 +15,10 @@ export default function DMPage() {
  
   const [chatId, setChatId] = useState(null);
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const openWith = location.state?.openWith || null;
+
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -41,6 +45,13 @@ useEffect(() => {
   socket.emit("joinRoom", chatId);
 
 }, [socket, chatId]);
+
+useEffect(() => {
+  if (!openWith) return;
+
+  setSelectedUser({ id: openWith, fromProfile: true });
+  console.log(openWith,"this is from the dm page")
+}, [openWith]);
 
 
   const handleSelectUser = ({ chatId, selectedUser, messages}) => {
