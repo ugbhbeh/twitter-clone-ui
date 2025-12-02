@@ -40,6 +40,13 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
     );
   };
 
+  useEffect(() => {
+  if (!selectedUserId) return;
+  console.log("calling the create chat route", selectedUserId)
+  handleCreateOrFindDM(selectedUserId);
+}, [selectedUserId]);
+
+
   const handleOpenChat = async (chatId) => {
   try {
     const messagesResponse = await api.get(`/chats/${chatId}`);

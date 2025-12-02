@@ -33,11 +33,6 @@ export default function Profile() {
     }
   }
 
-   useEffect( () => {
-    if (!profile) return;  
-       console.log(profile.id)
-   },[profile])
-
 const handleMessage = () => {
    if (!profile) return;
     navigate("/dm", { state: { openWith: profile.id} });

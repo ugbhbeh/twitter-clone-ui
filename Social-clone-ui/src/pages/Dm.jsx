@@ -48,9 +48,7 @@ useEffect(() => {
 
 useEffect(() => {
   if (!openWith) return;
-
   setSelectedUser({ id: openWith, fromProfile: true });
-  console.log(openWith,"this is from the dm page")
 }, [openWith]);
 
 
