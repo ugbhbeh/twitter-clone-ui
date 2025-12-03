@@ -42,7 +42,6 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
 
   useEffect(() => {
   if (!selectedUserId) return;
-  console.log("calling the create chat route", selectedUserId)
   handleCreateOrFindDM(selectedUserId);
 }, [selectedUserId]);
 
@@ -83,7 +82,6 @@ const handleCreateOrFindDM = async (userId) => {
           c.id === dm.id ? { ...c, otherUser, lastMessage: dm.lastMessage } : c
         );
       }
-   
       return [{ ...dm, otherUser }, ...prevChats];
     });
 
@@ -205,9 +203,7 @@ const handleCreateOrFindDM = async (userId) => {
 
   const renderOverlay = () => {
   const list = overlayTab === "contacts" ? contacts : users;
-
     const filteredList = getFilteredList(list);
-
     return (
       <div  key={contacts.length} className="absolute left-0 right-0 top-[110%] bg-white border shadow-lg rounded max-h-[70vh] overflow-y-auto z-20">
         <div className="flex items-center justify-between p-2 border-b">
@@ -240,7 +236,7 @@ const handleCreateOrFindDM = async (userId) => {
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 ">
           {filteredList.length ? (
             filteredList.map(renderUserRow)
           ) : (
