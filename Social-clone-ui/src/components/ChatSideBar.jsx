@@ -49,11 +49,11 @@ export default function Sidebar({ onSelectUser, selectedUserId, currentUserId, i
   const handleOpenChat = async (chatId) => {
   try {
     const messagesResponse = await api.get(`/chats/${chatId}`);
-    const group = chats.find(c => c.id === chatId);
+    const chat = chats.find(c => c.id === chatId);
 
     onSelectUser({
       chatId,
-      selectedUser: group.otherUser,  
+      selectedUser: chat.otherUser,  
       messages: messagesResponse.data.messages,
     });
 
@@ -97,8 +97,7 @@ const handleCreateOrFindDM = async (userId) => {
   }
 };
 
-
-  const handleDeleteChat = async (chatId) => {
+const handleDeleteChat = async (chatId) => {
     try {
       await api.delete(`/chats/${chatId}`);
       setChats((prev) => prev.filter((c) => c.id !== chatId));
@@ -199,7 +198,6 @@ const handleCreateOrFindDM = async (userId) => {
     )}
   </div>
 );
-
 
   const renderOverlay = () => {
   const list = overlayTab === "contacts" ? contacts : users;
